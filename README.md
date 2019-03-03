@@ -11,6 +11,12 @@ Schedule
     Saturday - 1pm
     Sunday - 1pm
 
+***Part 1*** - 1 Day
+***Part 2*** - 1 Day
+***Part 3*** - 2.5 Weeks
+
+***Next Session*** - Finish part 1 and start on part 2
+
 Filename: README
 Names: Darpan Beri, Blake Meyers, & Zach Selchau
 Class account username: Darpan Beri csscXXXX, Blake Meyers cssc0430,  Zach Selchau csscXXXX
