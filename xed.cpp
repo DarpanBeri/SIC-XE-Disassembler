@@ -2,6 +2,8 @@
 #include <iostream>
 #include <string>
 #include <exception>
+#include <cstring>
+#include <stdio>
 
 using namespace std;
 /*
