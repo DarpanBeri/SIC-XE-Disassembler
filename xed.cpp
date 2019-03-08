@@ -44,7 +44,7 @@ bool fileExists(const char* filename){
     return false;
 }
 
-int main(int argc char* argv[]){
+int main(int argc, char* argv[]){
     //Case 1: there are no arguments passed
     if(argc != 1){};//exit()
 
