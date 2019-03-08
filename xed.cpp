@@ -1,6 +1,9 @@
 #include <cstdlib>
 #include <iostream>
 #include <string>
+#include <exception>
+
+using namespace std;
 /*
     Pseduo code as of now:
         1. We check for correct input:
