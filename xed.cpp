@@ -1,3 +1,6 @@
+#include <cstdlib>
+#include <iostream>
+#include <string>
 /*
     Pseduo code as of now:
         1. We check for correct input:
@@ -17,6 +20,28 @@
             d. Write the .lis file
             e. Write the .sic file
 */
+
+bool fileExists(string filename){
+    FILE* fp;
+    if(fp = fopen(filename.c_str(), "r")){
+        fclose(fp);
+        return true;
+    }
+    return false;
+}
+
+bool fileExists(const char* filename){
+    FILE* fp;
+    if(fp = fopen(filename, "r")){
+        fclose(fp);
+        return true;
+    }
+    return false;
+}
+
+int main(int argc char* argv[]){
+
+}
 
 
 // Make Graceful exit function which includes tailored exit messages
