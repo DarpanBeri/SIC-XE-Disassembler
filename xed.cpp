@@ -40,6 +40,14 @@ bool fileExists(const char* filename){
 }
 
 int main(int argc char* argv[]){
+    //Case 1: there are no arguments passed
+    if(argc != 1){};//exit()
+
+    //Case 2: obj or sym file dne
+    string objFile (argv[1]);
+    string symFile = objFile + ".sym";
+    objFile = objFile + ".obj";
+    if(!fileExists(objFile) || !fileExists(symFile)){};//exit()
 
 }
 
