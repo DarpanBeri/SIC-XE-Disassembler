@@ -73,145 +73,145 @@ string hexToCommand(string hex){
         case 3://0C
             return "STA   ";
             break;
-        case 4;//10
+        case 4://10
             return "STX   ";
             break;
-        case 5;//14
+        case 5://14
             return "STL   ";
             break;
-        case 6;//18
+        case 6://18
             return "ADD   ";
             break;
-        case 7;//1C
+        case 7://1C
             return "SUB   ";
             break;
-        case 8;//20
+        case 8://20
             return "MUL   ";
             break;
-        case 9;//24
+        case 9://24
             return "DIV   ";
             break;
-        case 10;//28
+        case 10://28
             return "COMP  ";
             break;
-        case 11;//2C
+        case 11://2C
             return "TIX   ";
             break;
-        case 12;//30
+        case 12://30
             return "JEQ   ";
             break;
-        case 13;//34
+        case 13://34
             return "JGT   ";
             break;
-        case 14;//38
+        case 14://38
             return "JLT   ";
             break;
-        case 15;//3C
+        case 15://3C
             return "J     ";
             break;
-        case 16;//40
+        case 16://40
             return "AND   ";
             break;
-        case 17;//44
+        case 17://44
             return "OR    ";
             break;
-        case 18;//48
+        case 18://48
             return "JSUB  ";
             break;
-        case 19;//4C
+        case 19://4C
             return "RSUB  ";
             break;
-        case 20;//50
+        case 20://50
             return "LDCH  ";
             break;
-        case 21;//54
+        case 21://54
             return "STCH  ";
             break;
-        case 22;//58
+        case 22://58
             return "ADDF  ";
             break;
-        case 23;//5C
+        case 23://5C
             return "SUBF  ";
             break;
-        case 24;//60
+        case 24://60
             return "MULF  ";
             break;
-        case 25;//64
+        case 25://64
             return "DIVF  ";
             break;
-        case 26;//68
+        case 26://68
             return "LDB   ";
             break;
-        case 27;//6C
+        case 27://6C
             return "LDS   ";
             break;
-        case 28;//70
+        case 28://70
             return "LDF   ";
             break;
-        case 29;//74
+        case 29://74
             return "LDT   ";
             break;
-        case 30;//78
+        case 30://78
             return "STB   ";
             break;
-        case 31;//7C
+        case 31://7C
             return "STS   ";
             break;
-        case 32;//80
+        case 32://80
             return "STF   ";
             break;
-        case 33;//84
+        case 33://84
             return "STT   ";
             break;
-        case 34;//88
+        case 34://88
             return "COMPF ";
             break;
-        case 35;//8C
+        case 35://8C
             return "ERROR ";
             break;
-        case 36;//90
+        case 36://90
             return "ADDR  ";
             break;
-        case 37;//94
+        case 37://94
             return "SUBR  ";
             break;
-        case 38;//98
+        case 38://98
             return "MULR  ";
             break;
-        case 39;//9C
+        case 39://9C
             return "DIVR  ";
             break;
-        case 40;//A0
+        case 40://A0
             return "COMPR ";
             break;
-        case 41;//A4
+        case 41://A4
             return "SHIFTL";
             break;
-        case 42;//A8
+        case 42://A8
             return "SHIFTR";
             break;
-        case 43;//AC
+        case 43://AC
             return "RMO   ";
             break;
-        case 44;//B0
+        case 44://B0
             return "SVC   ";
             break;
-        case 45;//B4
+        case 45://B4
             return "CLEAR ";
             break;
-        case 46;//B8
+        case 46://B8
             return "TIXR  ";
             break;
-        case 47;//BC
+        case 47://BC
             return "SUBR ";
             break;
-        case 48;//C0
+        case 48://C0
             return "FLOAT ";
             break;
-        case 49;//C4
+        case 49://C4
             return "FIX   ";
             break;
-        case 50;//C8
+        case 50://C8
             return "OR    ";
             break;
     }
