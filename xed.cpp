@@ -4,6 +4,7 @@
 #include <exception>
 #include <cstring>
 #include <cstdio>
+#include <sstream>
 
 using namespace std;
 /*
@@ -43,6 +44,34 @@ bool fileExists(const char* filename){
     }
     return false;
 }
+
+int hexToDecimal(string num){
+    int x;
+    stringstream ss;
+
+    ss << hex << "0"+num;
+    ss >> x;
+
+    return x;
+}
+
+string hexToCommand(string hex){
+    int x = hexToDecimal(hex);
+
+    x /= 4;
+
+    switch(x){//command library
+        case 0:
+            return "LDA";
+            break;
+        case 1:
+            return "LDX";
+            break;
+    }
+
+    return "error";
+}
+
 
 int main(int argc, char* argv[]){
     //Case 1: there are no arguments passed
