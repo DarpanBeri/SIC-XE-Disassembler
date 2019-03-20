@@ -60,6 +60,7 @@ string hexToCommand(string hex){
     int x = hexToDecimal(hex);
     x /= 4;
 
+    //Produces an error on 8C, CC, and E4
     switch(x){//command library
         case 0://00
             return "LDA   ";
@@ -203,7 +204,7 @@ string hexToCommand(string hex){
             return "TIXR  ";
             break;
         case 47://BC
-            return "SUBR ";
+            return "SUBR  ";
             break;
         case 48://C0
             return "FLOAT ";
@@ -213,6 +214,42 @@ string hexToCommand(string hex){
             break;
         case 50://C8
             return "OR    ";
+            break;
+        case 51://CC
+            return "ERROR ";
+            break;
+        case 52://D0
+            return "LPS   ";
+            break;
+        case 53://D4
+            return "STI   ";
+            break;
+        case 54://D8
+            return "RD    ";
+            break;
+        case 55://DC
+            return "WD    ";
+            break;
+        case 56://E0
+            return "TD    ";
+            break;
+        case 57://E4
+            return "ERROR ";
+            break;
+        case 58://E8
+            return "STSW  ";
+            break;
+        case 59://EC
+            return "SSK   ";
+            break;
+        case 60://F0
+            return "SIO   ";
+            break;
+        case 61://F4
+            return "HIO   ";
+            break;
+        case 62://F8
+            return "TIO   ";
             break;
     }
 
