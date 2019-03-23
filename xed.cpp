@@ -375,6 +375,39 @@ class Symbol{
 
 };
 
+class Literal{
+    
+    private:
+        string address;
+        string length;
+        int decAddress;
+        int decLength;
+
+    public:
+        Literal(string addy, string len){
+            this->address = addy;
+            this->length = len;
+            this->decAddress = hexToDecimal(addy);
+            this->decLength = hexToDecimal(len);
+        }
+        
+        string getAddress(){
+            return this->address;
+        }
+
+        string getLength(){
+            return this->length;
+        }
+        
+        int getDecAddress(){
+            return this-> decAdress;
+        }
+
+        int getDecLength(){
+            return this-> decLength;
+        }
+};
+
 int main(int argc, char* argv[]){
     //Case 1: there are no arguments passed
     if(argc != 2)gracefulExit("Fatal Error: no filename given.");//exit()
