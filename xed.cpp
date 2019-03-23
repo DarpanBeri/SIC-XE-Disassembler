@@ -269,7 +269,8 @@ int main(int argc, char* argv[]){
     string objFile (argv[1]);
     string symFile = objFile + ".sym";
     objFile = objFile + ".obj";
-    if(!fileExists(objFile) || !fileExists(symFile)){};//exit()
+    if(!fileExists(objFile)){}//exit()
+    if(!fileExists(symFile)){};//exit()
 
 }
 
