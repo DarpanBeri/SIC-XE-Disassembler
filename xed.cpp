@@ -13,6 +13,10 @@ using namespace std;
             a. Check for actual argument
             b. check for existence for .obj and .sym file
         1.b If check fail, do graceful exit
+            - obj file not found
+            - sym file not found
+            - Both obj and sym file not found
+            - No argument given
 
         2. Initalize .sic and .lis files. Maybe make one more intermediatory file for debugging purposes.
             a. Create file via C++.
