@@ -31,7 +31,12 @@ using namespace std;
         2. Initalize .sic and .lis files. Maybe make one more intermediatory file for debugging purposes.
             a. Create file via C++.
 
+        INTERNAL DATASTRUCTURE:
+            1.Symbols: Has a symbolName that has a value and flag associated with it 
+            2.Literals: have length and address
+
         3. Algorithm for disassembling
+            ---- NEED INTERNAL DATA STRUCTURE FOR STORING .SYM FILE----------
             a. Read the .obj and .sym file.
             b. Interpret the contents via code.
             c. Write line by line? or store in intermediatory file and then write to .lis and .sic.
