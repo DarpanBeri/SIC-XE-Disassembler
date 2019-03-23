@@ -256,6 +256,10 @@ string hexToCommand(string hex){
     return "ERROR";
 }
 
+void gracefulExit(string msg){
+    cout << msg << endl;
+    exit(0);
+}
 
 int main(int argc, char* argv[]){
     //Case 1: there are no arguments passed
