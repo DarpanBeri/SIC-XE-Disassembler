@@ -267,14 +267,14 @@ void gracefulExit(string msg){
 
 int main(int argc, char* argv[]){
     //Case 1: there are no arguments passed
-    if(argc != 1){};//exit()
+    if(argc != 1)gracefulExit("Fatal Error: no filename given.");//exit()
 
     //Case 2: obj or sym file dne
     string objFile (argv[1]);
     string symFile = objFile + ".sym";
     objFile = objFile + ".obj";
-    if(!fileExists(objFile)){}//exit()
-    if(!fileExists(symFile)){};//exit()
+    if(!fileExists(objFile))gracefulExit("Fatal Error: object file not found.");//exit()
+    if(!fileExists(symFile))gracefulExit("Fatal Error: symbol file not found.");//exit()
 
 }
 
