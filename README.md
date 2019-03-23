@@ -24,27 +24,71 @@ Panned development process and plans:
 
 ***Next Session*** - Finish part 1 and start on part 2
 
-Filename: README
 
+<!-----------------------------------------------------------------
+ Name: Blake Meyers(cssc0430), Darpan Beri(cssc0429), Zach Selchau(cssc0418)
+ Project: CS530 Assignment 2
+ File: README.md
+ Notes: A README file describing the program and detailing its files.
+--------------------------------------------------------------------->
 
-Names: Darpan Beri, Blake Meyers, & Zach Selchau
+## CS-530, Spring 2019 Assignment 2
+### Developed by Blake Meyers(cssc0430), Darpan Beri(cssc0429), Zach Selchau(cssc0418)
 
+#### The Program:
+    Opens an XE object file, and its accompanying symbol file.
+    Then it will disassemble the object code, and generate an XE source file, and XE listing file using the disassembled code.
 
-Class account username: Darpan Beri cssc0429, Blake Meyers cssc0430,  Zach Selchau cssc0418
+#### Files Included:
+**README.md**:
 
+    A README file describing the program and detailing its files.
 
-Class information: CS530 Spring 2019
+**xed.cpp**:
 
+    The file cointains an algorithm that opens an XE object file and its accompanying symbol file, which then disassembles the object code, and generate an XE source file, and XE listing file using the disassembled code.
 
-Assignment information: Assignment #2, XE Dissasembler. Opens an XE object file, and its accompanying symbol file, then it will disassemble the object code, and generate an XE source file,  and XE listing file using the disassembled code.
+**xed.hpp**:
 
+    Declares and briefly explains functions implemented in xed.cpp.
 
+**Makefile**:
 
-File manifest: 
+    Creates a compiled version of xed.cpp.
 
-Compile instructions: 
+#### Compilation Instructions:
+**Make Instructions:**
 
-Operating instructions: 
+    add stuff here
 
+**Running the Program:**
 
-Lessons Learned:
+    add stuff here
+
+**NOTE:** <> are not part of the command.
+
+#### Operating Instructions:
+**Command Line Options**:
+
+    add stuff here
+
+**Required Input**:
+
+    add stuff here
+
+#### Significant Design Decisions:
+    add stuff here
+
+#### Extra features:
+**add stuff here:**
+
+    add stuff here
+
+#### Known Deficiencies and Bugs:
+**Known Bugs and Deficiencies**
+    add stuff here
+
+#### Lessons Learned:
+* add stuff here
+
+<!-----------------------------------------[ EOF: README.md ]--------------------------------->
