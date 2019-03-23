@@ -1,3 +1,13 @@
+/*************************************************************
+ Name: Blake Meyers(cssc0430), Darpan Beri(cssc0429), Zach Selchau(cssc0418) 
+ Project: CS530 Assignment 2
+ File: xed.cpp
+ Notes: The file cointains an algorithm that opens an XE object 
+ file and its accompanying symbol file, which then disassembles 
+ the object code, and generate an XE source file, and XE 
+ listing file using the disassembled code.
+ *************************************************************/
+
 #include <cstdlib>
 #include <iostream>
 #include <string>
