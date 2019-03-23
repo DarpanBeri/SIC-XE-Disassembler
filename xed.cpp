@@ -64,6 +64,15 @@ using namespace std;
     Need to add 0A to output files too.
 */
 
+
+/*************************************************************
+ FUNCTION: fileExists()
+ DESCRIPTION: Check for existence of files
+ I/O:
+    input parameters: String and Const Char
+    output: boolean. 
+ Note: Function overloading
+ *************************************************************/
 bool fileExists(string filename){
     FILE* fp;
     if(fp = fopen(filename.c_str(), "r")){
@@ -72,7 +81,6 @@ bool fileExists(string filename){
     }
     return false;
 }
-
 bool fileExists(const char* filename){
     FILE* fp;
     if(fp = fopen(filename, "r")){
@@ -82,7 +90,14 @@ bool fileExists(const char* filename){
     return false;
 }
 
-FILE* makeFile(string filename){
+/*************************************************************
+ FUNCTION: createFile()
+ DESCRIPTION: Creates a new file
+ I/O:
+    input parameters: String
+    output: Pointer to a created file. 
+ *************************************************************/
+FILE* createFile(string filename){
     FILE* fp;
     
     fp = fopen(filename.c_str(), "w");
@@ -92,6 +107,13 @@ FILE* makeFile(string filename){
     return fp;
 }
 
+/*************************************************************
+ FUNCTION: hexToDecimal()
+ DESCRIPTION: Converts hex to Decimal
+ I/O:
+    input parameters: String
+    output: Integer 
+ *************************************************************/
 int hexToDecimal(string num){
     int x;
     stringstream ss;
@@ -103,6 +125,13 @@ int hexToDecimal(string num){
 }
 
 //Returns a 6 char string
+/*************************************************************
+ FUNCTION: hexToCommand()
+ DESCRIPTION: Converts hex opcode to respective function
+ I/O:
+    input parameters: String
+    output: String. 
+ *************************************************************/
 string hexToCommand(string hex){
     int x = hexToDecimal(hex);
     x /= 4;
@@ -303,6 +332,13 @@ string hexToCommand(string hex){
     return "ERROR";
 }
 
+/*************************************************************
+ FUNCTION: gracefulExit()
+ DESCRIPTION: Exits gracefully
+ I/O:
+    input parameters: String
+    output: Void. 
+ *************************************************************/
 void gracefulExit(string msg){
     cout << msg << endl;
     exit(EXIT_FAILURE);
