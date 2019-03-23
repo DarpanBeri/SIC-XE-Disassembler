@@ -49,6 +49,16 @@ bool fileExists(const char* filename){
     return false;
 }
 
+FILE* makeFile(string filename){
+    FILE* fp;
+    
+    fp = fopen(filename.c_str(), "w");
+
+    if(!fp)gracefulExit("Fatal Error: failed to create file '"+filename+"'");
+
+    return fp;
+}
+
 int hexToDecimal(string num){
     int x;
     stringstream ss;
@@ -267,7 +277,7 @@ void gracefulExit(string msg){
 
 int main(int argc, char* argv[]){
     //Case 1: there are no arguments passed
-    if(argc != 1)gracefulExit("Fatal Error: no filename given.");//exit()
+    if(argc != 2)gracefulExit("Fatal Error: no filename given.");//exit()
 
     //Case 2: obj or sym file dne
     string objFile (argv[1]);
@@ -277,9 +287,6 @@ int main(int argc, char* argv[]){
     if(!fileExists(symFile))gracefulExit("Fatal Error: symbol file not found.");//exit()
 
 }
-
-
-// Make Graceful exit function which includes tailored exit messages
 
 /*
     Input                   Output
