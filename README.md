@@ -2,9 +2,9 @@
 
 Panned development process and plans:
 
-    -We plan to use an agile style of coding.
+    - We plan to use an agile style of coding.
 
-    -We plan to use a Schedule
+    - We plan to use a Schedule
 
 ***Potential Meeting days***
 
