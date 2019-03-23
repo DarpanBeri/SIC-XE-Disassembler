@@ -26,11 +26,15 @@ Panned development process and plans:
 
 Filename: README
 
+
 Names: Darpan Beri, Blake Meyers, & Zach Selchau
 
-Class account username: Darpan Beri csscXXXX, Blake Meyers cssc0430,  Zach Selchau csscXXXX
+
+Class account username: Darpan Beri cssc0429, Blake Meyers cssc0430,  Zach Selchau cssc0418
+
 
 Class information: CS530 Spring 2019
+
 
 Assignment information: Assignment #2, XE Dissasembler. Opens an XE object file, and its accompanying symbol file, then it will disassemble the object code, and generate an XE source file,  and XE listing file using the disassembled code.
 
