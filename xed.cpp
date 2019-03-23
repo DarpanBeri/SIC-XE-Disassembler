@@ -262,7 +262,7 @@ string hexToCommand(string hex){
 
 void gracefulExit(string msg){
     cout << msg << endl;
-    exit(0);
+    exit(1);
 }
 
 int main(int argc, char* argv[]){
