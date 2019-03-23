@@ -31,6 +31,29 @@ using namespace std;
             e. Write the .sic file
 */
 
+/* INPUT AND OUTPUT STRUCTURE:
+    Input                   Output
+    <filename>.obj           <filename>.sic
+    <filename>.sym           <filename>.lis
+
+    % xed <filename>
+    
+*/
+
+/*  Tips from prof:
+
+    Graceful Exit:
+        exit() -> Test return value on every system call. Int error handling routine
+    
+    Don't use templates in C++.
+    Use C versions of I/O commands
+*/
+
+/*
+    NEW LINE FEED: '0A', Used Hex editor to find that Out
+    Need to add 0A to output files too.
+*/
+
 bool fileExists(string filename){
     FILE* fp;
     if(fp = fopen(filename.c_str(), "r")){
@@ -287,22 +310,3 @@ int main(int argc, char* argv[]){
     if(!fileExists(symFile))gracefulExit("Fatal Error: symbol file not found.");//exit()
 
 }
-
-/*
-    Input                   Output
-    <filename>.obj           <filename>.sic
-    <filename>.sym           <filename>.lis
-
-    % xed <filename>
-    
-*/
-
-/*
-    Tips from prof:
-
-    Graceful Exit:
-        exit() -> Test return value on every system call. Int error handling routine
-    
-    Don't use templates in C++.
-    Use C versions of I/O commands
-*/
