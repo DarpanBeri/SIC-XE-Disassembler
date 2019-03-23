@@ -69,6 +69,17 @@ using namespace std;
     Need to add 0A to output files too.
 */
 
+/*************************************************************
+ FUNCTION: gracefulExit()
+ DESCRIPTION: Exits gracefully
+ I/O:
+    input parameters: String
+    output: Void. 
+ *************************************************************/
+void gracefulExit(string msg){
+    cout << msg << endl;
+    exit(EXIT_FAILURE);
+}
 
 /*************************************************************
  FUNCTION: fileExists()
@@ -337,17 +348,32 @@ string hexToCommand(string hex){
     return "ERROR";
 }
 
-/*************************************************************
- FUNCTION: gracefulExit()
- DESCRIPTION: Exits gracefully
- I/O:
-    input parameters: String
-    output: Void. 
- *************************************************************/
-void gracefulExit(string msg){
-    cout << msg << endl;
-    exit(EXIT_FAILURE);
-}
+class Symbol{
+    private:
+        char flag;
+        string value;
+        int decValue;
+    
+    public:
+        Symbol(string val, char flg){
+            this->flag = flg;
+            this->value = val;
+            this->decValue = hexToDecimal(val);
+        }
+        
+        char getFlag(){
+            return this->flag;
+        }
+        
+        string getValue(){
+            return this->value;
+        }
+        
+        int getDecValue(){
+            return this->decValue;
+        }
+
+};
 
 int main(int argc, char* argv[]){
     //Case 1: there are no arguments passed
