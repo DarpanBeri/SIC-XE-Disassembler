@@ -353,12 +353,14 @@ class Symbol{
         char flag;
         string value;
         int decValue;
+        Symbol next;
     
     public:
-        Symbol(string val, char flg){
+        Symbol(string val, char flg, Symbol nextSym){
             this->flag = flg;
             this->value = val;
             this->decValue = hexToDecimal(val);
+            this->next = nextSym;
         }
         
         char getFlag(){
@@ -373,6 +375,14 @@ class Symbol{
             return this->decValue;
         }
 
+        Symbol getNext(){
+            return this.next;
+        }
+
+        void setNext(Symbol nextSym){
+            this->next = nextSym;
+        }
+
 };
 
 class Literal{
@@ -382,13 +392,15 @@ class Literal{
         string length;
         int decAddress;
         int decLength;
+        Literal next;
 
     public:
-        Literal(string addy, string len){
+        Literal(string addy, string len, Literal nextLit){
             this->address = addy;
             this->length = len;
             this->decAddress = hexToDecimal(addy);
             this->decLength = hexToDecimal(len);
+            this->next = nextLit;
         }
         
         string getAddress(){
@@ -405,6 +417,14 @@ class Literal{
 
         int getDecLength(){
             return this-> decLength;
+        }
+        
+        Literal getNext(){
+            return this->next;
+        }
+
+        void setNext(Literal nextLit){
+            this->next = nextLit;
         }
 };
 
