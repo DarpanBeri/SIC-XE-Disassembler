@@ -123,6 +123,10 @@ FILE* createFile(string filename){
     return fp;
 }
 
+bool closeFile(FILE* fp){
+    return fclose(fp) == 0;
+}
+
 /*************************************************************
  FUNCTION: hexToDecimal()
  DESCRIPTION: Converts hex to Decimal
