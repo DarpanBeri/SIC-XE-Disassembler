@@ -350,13 +350,15 @@ string hexToCommand(string hex){
 
 class Symbol{
     private:
+        string name;
         char flag;
         string value;
         int decValue;
         Symbol next;
     
     public:
-        Symbol(string val, char flg, Symbol nextSym){
+        Symbol(string nam, string val, char flg, Symbol nextSym){
+            this->name = nam;
             this->flag = flg;
             this->value = val;
             this->decValue = hexToDecimal(val);
@@ -388,6 +390,7 @@ class Symbol{
 class Literal{
     
     private:
+        string name;
         string address;
         string length;
         int decAddress;
@@ -395,7 +398,8 @@ class Literal{
         Literal next;
 
     public:
-        Literal(string addy, string len, Literal nextLit){
+        Literal(string nam, string addy, string len, Literal nextLit){
+            this->name = nam;
             this->address = addy;
             this->length = len;
             this->decAddress = hexToDecimal(addy);
