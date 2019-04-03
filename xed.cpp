@@ -452,7 +452,14 @@ int main(int argc, char* argv[]){
         5. skip 2 more bytes (spaces)
         6. take next byte as a flag
         7. check for two 'oa' bytes in a row, else jump 2
-        8. 
+        8. skip until found two more 'oa'
+        9. skip all whitespace
+        10. read until whitespace, save into literal name
+        11. skip whitespace until not whitespace
+        12. take bytes into length until whitespace
+        13. skip whitespace until not whitespace
+        14. take in 6 bytes into address
+        15. go until another '0a' and test if you can read one more byte
     **/
 
 }
