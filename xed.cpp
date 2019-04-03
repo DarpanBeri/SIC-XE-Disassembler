@@ -436,6 +436,10 @@ class Literal{
         }
 };
 
+int toSymbol(Symbol head, FILE *fp){
+
+}
+
 int main(int argc, char* argv[]){
     //Case 1: there are no arguments passed
     if(argc != 2)gracefulExit("Fatal Error: no filename given.");//exit()
@@ -465,5 +469,9 @@ int main(int argc, char* argv[]){
         14. take in 6 bytes into address
         15. go until another '0a' and test if you can read one more byte
     **/
-
+    Symbol symHead = NULL;//Create sym head and fp
+    FILE *fp = fopen(objFile);
+    toSymbol(symHead, fp);//pass to toSymbol
+                            //check if next byte exists w/ while(!feof(fp)){}
+    
 }
