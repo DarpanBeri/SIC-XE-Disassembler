@@ -436,22 +436,7 @@ class Literal{
         }
 };
 
-int toSymbol(Symbol head, FILE *fp){
-
-}
-
-int main(int argc, char* argv[]){
-    //Case 1: there are no arguments passed
-    if(argc != 2)gracefulExit("Fatal Error: no filename given.");//exit()
-
-    //Case 2: obj or sym file dne
-    string objFile (argv[1]);
-    string symFile = objFile + ".sym";
-    objFile = objFile + ".obj";
-    if(!fileExists(objFile))gracefulExit("Fatal Error: object file not found.");//exit()
-    if(!fileExists(symFile))gracefulExit("Fatal Error: symbol file not found.");//exit()
-
-    //Reading symtab
+//Reading symtab
     /**
         1. iterate past first two '0a'
         2. save the next six bytes as a string 'name' for symbol
@@ -469,7 +454,32 @@ int main(int argc, char* argv[]){
         14. take in 6 bytes into address
         15. go until another '0a' and test if you can read one more byte
     **/
+
+Symbol toSymbol(Symbol head, FILE *fp){
+    while(!feof(fp)){
+        int c = 0;
+        
+    }
+    return head;
+}
+
+Literal toLiteral(Literal head, FILE *fp){
+
+}
+
+int main(int argc, char* argv[]){
+    //Case 1: there are no arguments passed
+    if(argc != 2)gracefulExit("Fatal Error: no filename given.");//exit()
+
+    //Case 2: obj or sym file dne
+    string objFile (argv[1]);
+    string symFile = objFile + ".sym";
+    objFile = objFile + ".obj";
+    if(!fileExists(objFile))gracefulExit("Fatal Error: object file not found.");//exit()
+    if(!fileExists(symFile))gracefulExit("Fatal Error: symbol file not found.");//exit()
+
     Symbol symHead = NULL;//Create sym head and fp
+    Literal litHead = NULL;
     FILE *fp = fopen(objFile);
     toSymbol(symHead, fp);//pass to toSymbol
                             //check if next byte exists w/ while(!feof(fp)){}
