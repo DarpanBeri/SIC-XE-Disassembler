@@ -439,4 +439,16 @@ int main(int argc, char* argv[]){
     if(!fileExists(objFile))gracefulExit("Fatal Error: object file not found.");//exit()
     if(!fileExists(symFile))gracefulExit("Fatal Error: symbol file not found.");//exit()
 
+    //Reading symtab
+    /**
+        1. iterate past first two '0a'
+        2. save the next six bytes as a string 'name' for symbol
+        3. skip 2 bytes (spaces)
+        4. take next six bytes as values
+        5. skip 2 more bytes (spaces)
+        6. take next byte as a flag
+        7. check for two 'oa' bytes in a row, else jump 2
+        8. 
+    **/
+
 }
