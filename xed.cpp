@@ -456,10 +456,48 @@ class Literal{
     **/
 
 Symbol toSymbol(Symbol head, FILE *fp){
-    while(!feof(fp)){
-        int c = 0;
-        
+    int c = 0;
+    string tmpName = "";
+    string tmpValue = "";
+    char tmpFlag;
+
+    if(feof(fp))return head;
+    for(int i = 0; i<2; i++){//1. iterate past first two '0a'
+         c = fgetc(fp);
+        if(c != 10) i--;
     }
+
+    while(!feof(fp)){// Started taking in Symbols
+        for(int i = 0; i<6; i++){//2. save the next six bytes as a string 'name' for symbol
+            c =fgetc(fp);
+            if(i==0 && c == 10)return head;//7. check for two 'oa' bytes in a row, else jump 2
+            char s = static_cast<char>(c);
+            tmpName += s;
+        }
+
+        c =fgetc(fp);//3. skip 2 bytes (spaces)
+        c =fgetc(fp);
+
+        for(int i = 0; i<6; i++){//4. take next six bytes as values
+            c =fgetc(fp);
+            char s = static_cast<char>(c);
+            tmpValue += s;
+        }
+
+        c =fgetc(fp);//5. skip 2 bytes (spaces)
+        c =fgetc(fp);
+
+        c = fgetc(fp);//6. take next byte as a flag
+        tmpFlag = static_cast<char>(c);
+
+        Symbol tmpSym(tmpName, tmpValue, tmpFlag, head);//6.5 create Symbol object and put in linked list backwards
+        head = tmpSym;
+        tmpName = "";
+        tmpValue = "";
+
+        c = fgetc(fp)//7. check for two 'oa' bytes in a row, else jump 2
+    }
+
     return head;
 }
 
