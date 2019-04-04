@@ -8,6 +8,11 @@
  listing file using the disassembled code.
  *************************************************************/
 
+ /*
+    Zach and DB added toSymbol and toLiteral and linked list datastructure to traverse through symbols and literals(different linked list respectively).
+    Note: The first symbol is the last element of the linked list and so on.
+ */
+
 #include <cstdlib>
 #include <iostream>
 #include <string>
@@ -501,8 +506,69 @@ Symbol toSymbol(Symbol head, FILE *fp){
     return head;
 }
 
-Literal toLiteral(Literal head, FILE *fp){
+/*
+    8. skip until found two more 'oa'
+    9. skip all whitespace
+        10. read until whitespace, save into literal name
+        11. skip whitespace until not whitespace
+        12. take bytes into length until whitespace
+        13. skip whitespace until not whitespace
+        14. take in 6 bytes into address
+        15. go until another '0a' and test if you can read one more byte
+*/
 
+Literal toLiteral(Literal head, FILE *fp){
+    int c;
+    string tmpName = "";
+    string tmpAddr = "";
+    string tmpLen = "";
+
+    if(feof(fp))return head;
+    for(int i = 0; i<2; i++){// 8. skip until found two more '0a'
+         c = fgetc(fp);
+        if(c != 10) i--;
+    }
+
+    while(!feof(fp)){ // either EOF or whitespace
+        c = fgetc(fp);
+        while(c == 20)c = fgetc(fp);
+
+        while(c != 20){ // 12. take bytes into name until whitespace
+            char s = static_cast<char>(c);
+            tmpName += s;
+            c = fgetc(fp);
+        }
+
+        while(c == 20)c = fgetc(fp); // 13. skip whitespace until not whitespace
+
+        // save to temp length
+        while(c != 20){ // 12. take bytes into length until whitespace
+            char s = static_cast<char>(c);
+            tmpLen += s;
+            c = fgetc(fp);
+        }
+
+        while(c == 20)c = fgetc(fp); // 13. skip whitespace until not whitespace
+
+        for(int i = 0; i<6; i++){// 14. take in 6 bytes into address
+            c =fgetc(fp);
+            char s = static_cast<char>(c);
+            tmpAddr += s;
+        }
+
+        // Save to literal
+        Literal tmpLit(tmpName, tmpAddr, tmpLen, head);//6.5 create Literal object and put in linked list backwards
+        head = tmpLit;
+        tmpName = "";
+        tmpAddr = "";
+        tmpLen = "";
+
+
+        c = fgetc(fp) // c becomes '0A' && 15. go until another '0a' and test if you can read one more byte
+
+    }
+
+    return head;
 }
 
 int main(int argc, char* argv[]){
