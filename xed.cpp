@@ -1,10 +1,10 @@
 /*************************************************************
- Name: Blake Meyers(cssc0430), Darpan Beri(cssc0429), Zach Selchau(cssc0418) 
+ Name: Blake Meyers(cssc0430), Darpan Beri(cssc0429), Zach Selchau(cssc0418)
  Project: CS530 Assignment 2
  File: xed.cpp
- Notes: The file cointains an algorithm that opens an XE object 
- file and its accompanying symbol file, which then disassembles 
- the object code, and generate an XE source file, and XE 
+ Notes: The file cointains an algorithm that opens an XE object
+ file and its accompanying symbol file, which then disassembles
+ the object code, and generate an XE source file, and XE
  listing file using the disassembled code.
  *************************************************************/
 
@@ -37,7 +37,7 @@ using namespace std;
             a. Create file via C++.
 
         INTERNAL DATASTRUCTURE:
-            1.Symbols: Has a symbolName that has a value and flag associated with it 
+            1.Symbols: Has a symbolName that has a value and flag associated with it
             2.Literals: have length and address
 
         3. Algorithm for disassembling
@@ -57,14 +57,14 @@ using namespace std;
     <filename>.sym           <filename>.lis
 
     % xed <filename>
-    
+
 */
 
 /*  Tips from prof:
 
     Graceful Exit:
         exit() -> Test return value on every system call. Int error handling routine
-    
+
     Don't use templates in C++.
     Use C versions of I/O commands
 */
@@ -79,7 +79,7 @@ using namespace std;
  DESCRIPTION: Exits gracefully
  I/O:
     input parameters: String
-    output: Void. 
+    output: Void.
  *************************************************************/
 void gracefulExit(string msg){
     cout << msg << endl;
@@ -91,7 +91,7 @@ void gracefulExit(string msg){
  DESCRIPTION: Check for existence of files
  I/O:
     input parameters: String and Const Char
-    output: boolean. 
+    output: boolean.
  Note: Function overloading
  *************************************************************/
 bool fileExists(string filename){
@@ -116,11 +116,11 @@ bool fileExists(const char* filename){
  DESCRIPTION: Creates a new file
  I/O:
     input parameters: String
-    output: Pointer to a created file. 
+    output: Pointer to a created file.
  *************************************************************/
 FILE* createFile(string filename){
     FILE* fp;
-    
+
     fp = fopen(filename.c_str(), "w");
 
     if(!fp)gracefulExit("Fatal Error: failed to create file '"+filename+"'");
@@ -137,7 +137,7 @@ bool closeFile(FILE* fp){
  DESCRIPTION: Converts hex to Decimal
  I/O:
     input parameters: String
-    output: Integer 
+    output: Integer
  *************************************************************/
 int hexToDecimal(string num){
     int x;
@@ -155,7 +155,7 @@ int hexToDecimal(string num){
  DESCRIPTION: Converts hex opcode to respective function
  I/O:
     input parameters: String
-    output: String. 
+    output: String.
  *************************************************************/
 string hexToCommand(string hex){
     int x = hexToDecimal(hex);
@@ -363,51 +363,51 @@ class Symbol{
         char flag;
         string value;
         int decValue;
-        Symbol next;
-    
+        Symbol *next;
+
     public:
-        Symbol(string nam, string val, char flg, Symbol nextSym){
+        Symbol(string nam, string val, char flg, Symbol *nextSym){
             this->name = nam;
             this->flag = flg;
             this->value = val;
             this->decValue = hexToDecimal(val);
             this->next = nextSym;
         }
-        
+
         char getFlag(){
             return this->flag;
         }
-        
+
         string getValue(){
             return this->value;
         }
-        
+
         int getDecValue(){
             return this->decValue;
         }
 
-        Symbol getNext(){
-            return this.next;
+        Symbol* getNext(){
+            return this->next;
         }
 
-        void setNext(Symbol nextSym){
+        void setNext(Symbol *nextSym){
             this->next = nextSym;
         }
 
 };
 
 class Literal{
-    
+
     private:
         string name;
         string address;
         string length;
         int decAddress;
         int decLength;
-        Literal next;
+        Literal *next;
 
     public:
-        Literal(string nam, string addy, string len, Literal nextLit){
+        Literal(string nam, string addy, string len, Literal *nextLit){
             this->name = nam;
             this->address = addy;
             this->length = len;
@@ -415,7 +415,7 @@ class Literal{
             this->decLength = hexToDecimal(len);
             this->next = nextLit;
         }
-        
+
         string getAddress(){
             return this->address;
         }
@@ -423,20 +423,20 @@ class Literal{
         string getLength(){
             return this->length;
         }
-        
+
         int getDecAddress(){
-            return this-> decAdress;
+            return this-> decAddress;
         }
 
         int getDecLength(){
             return this-> decLength;
         }
-        
-        Literal getNext(){
+
+        Literal* getNext(){
             return this->next;
         }
 
-        void setNext(Literal nextLit){
+        void setNext(Literal *nextLit){
             this->next = nextLit;
         }
 };
@@ -460,7 +460,7 @@ class Literal{
         15. go until another '0a' and test if you can read one more byte
     **/
 
-Symbol toSymbol(Symbol head, FILE *fp){
+Symbol* toSymbol(Symbol* head, FILE *fp){
     int c = 0;
     string tmpName = "";
     string tmpValue = "";
@@ -496,11 +496,11 @@ Symbol toSymbol(Symbol head, FILE *fp){
         tmpFlag = static_cast<char>(c);
 
         Symbol tmpSym(tmpName, tmpValue, tmpFlag, head);//6.5 create Symbol object and put in linked list backwards
-        head = tmpSym;
+        head = &tmpSym;
         tmpName = "";
         tmpValue = "";
 
-        c = fgetc(fp)//7. check for two 'oa' bytes in a row, else jump 2
+        c = fgetc(fp);//7. check for two 'oa' bytes in a row, else jump 2
     }
 
     return head;
@@ -517,7 +517,7 @@ Symbol toSymbol(Symbol head, FILE *fp){
         15. go until another '0a' and test if you can read one more byte
 */
 
-Literal toLiteral(Literal head, FILE *fp){
+Literal* toLiteral(Literal* head, FILE *fp){
     int c;
     string tmpName = "";
     string tmpAddr = "";
@@ -558,13 +558,13 @@ Literal toLiteral(Literal head, FILE *fp){
 
         // Save to literal
         Literal tmpLit(tmpName, tmpAddr, tmpLen, head);//6.5 create Literal object and put in linked list backwards
-        head = tmpLit;
+        head = &tmpLit;
         tmpName = "";
         tmpAddr = "";
         tmpLen = "";
 
 
-        c = fgetc(fp) // c becomes '0A' && 15. go until another '0a' and test if you can read one more byte
+        c = fgetc(fp); // c becomes '0A' && 15. go until another '0a' and test if you can read one more byte
 
     }
 
@@ -582,10 +582,10 @@ int main(int argc, char* argv[]){
     if(!fileExists(objFile))gracefulExit("Fatal Error: object file not found.");//exit()
     if(!fileExists(symFile))gracefulExit("Fatal Error: symbol file not found.");//exit()
 
-    Symbol symHead = NULL;//Create sym head and fp
-    Literal litHead = NULL;
-    FILE *fp = fopen(objFile);
+    Symbol *symHead = nullptr;//Create sym head and fp
+    Literal *litHead = nullptr;
+    FILE *fp = fopen(objFile.c_str(), "r");
     toSymbol(symHead, fp);//pass to toSymbol
                             //check if next byte exists w/ while(!feof(fp)){}
-    
+
 }
