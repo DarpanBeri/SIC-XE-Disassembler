@@ -572,6 +572,14 @@ Literal* toLiteral(Literal* &head, FILE *fp){
     return head;
 }
 
+void readObj(FILE *fp){
+    c = fgetc(fp);
+    if(c != 72)gracefulExit("Fatal Error: no header record found in object file."); // No header record found
+
+    
+
+}
+
 int main(int argc, char* argv[]){
     //Case 1: there are no arguments passed
     if(argc != 2)gracefulExit("Fatal Error: no filename given.");//exit()
@@ -596,6 +604,7 @@ int main(int argc, char* argv[]){
     */
     // READING OBJ FILE BELOW
     FILE *fpObj = fopen(objFile.c_str(), "r");
+    readObj(fpObj);
 
     /* READING FROM OBJ FILE
 
