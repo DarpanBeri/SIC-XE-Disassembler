@@ -594,4 +594,31 @@ int main(int argc, char* argv[]){
     cout << symHead->next->getValue() << endl;
     cout << litHead->getAddress() << endl;
 
+    // READING OBJ FILE BELOW
+    FILE *fpobj = fopen(objFile.c_str(), "r");
+
+    /* READING FROM OBJ FILE
+
+        Datastructure to store the info below:
+            1. Vector for each line.
+
+        1. Check if 1st character is H. Else GTFO.
+            a. Take in next 6 characters as name of the program. In the first line.
+            b. Take in next 6 characters. That is the first address for .lis instruction.
+            c. Take in the next 6 characters. That is the lenght of the program.
+            d. The next character is 0A(hex), i.e. move to next line.
+        2. Check if the 1st character is T. Else go to 3.
+            a. 1st 6 characters are the starting address in that record.
+            b. Next 2 characters are the lenght of the text record
+            c. From the next record to 0A, thats all opcode.(Look in modification record to spot Extended bits)
+            d. Go to 2.
+        3. Check if the 1st character is M. Else go to 4.
+            a. First 6 characters are address of instruction to be modified.
+            b. Next 2 characters are the numbers of characters in the machine instruction's opcode that must be modified.
+            c. Store next characters till 0A. These characters are the (+-label) whose address we have to add(or sub) to the address of the instruction
+            d. Go to 3.
+        4. Check if the 1st character is E. Else ERROR, NO END RECORD.
+            a. Do nothing
+    */
+
 }
