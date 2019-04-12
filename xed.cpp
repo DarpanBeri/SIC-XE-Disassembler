@@ -590,17 +590,15 @@ int main(int argc, char* argv[]){
                             //check if next byte exists w/ while(!feof(fp)){}
     litHead = toLiteral(litHead, fp);
 
-    cout << symHead->getValue() << endl;
+    /*cout << symHead->getValue() << endl;
     cout << symHead->next->getValue() << endl;
     cout << litHead->getAddress() << endl;
+    */
 
     // READING OBJ FILE BELOW
     FILE *fpObj = fopen(objFile.c_str(), "r");
 
     /* READING FROM OBJ FILE
-
-        Datastructure to store the info below:
-            1. Vector for each line.
 
         1. Check if 1st character is H. Else GTFO.
             a. Take in next 6 characters as name of the program. In the first line.
