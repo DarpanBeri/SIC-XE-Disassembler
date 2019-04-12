@@ -372,6 +372,7 @@ class Symbol{
             this->value = val;
             this->decValue = hexToDecimal(val);
             this->next = nextSym;
+            cout << this->name << ", " << this->value << ", " << this->flag << endl;
         }
 
         char getFlag(){
@@ -414,6 +415,7 @@ class Literal{
             this->decAddress = hexToDecimal(addy);
             this->decLength = hexToDecimal(len);
             this->next = nextLit;
+            cout << this->name << ", " << this->address << ", " << this->length << endl;
         }
 
         string getAddress(){
@@ -531,29 +533,32 @@ Literal* toLiteral(Literal* head, FILE *fp){
 
     while(!feof(fp)){ // either EOF or whitespace
         c = fgetc(fp);
-        while(c == 20)c = fgetc(fp);
 
-        while(c != 20){ // 12. take bytes into name until whitespace
+        if(c == -1)return head;
+
+        while(c == 32)c = fgetc(fp);
+
+        while(c != 32){ // 12. take bytes into name until whitespace
             char s = static_cast<char>(c);
             tmpName += s;
             c = fgetc(fp);
         }
 
-        while(c == 20)c = fgetc(fp); // 13. skip whitespace until not whitespace
+        while(c == 32)c = fgetc(fp); // 13. skip whitespace until not whitespace
 
         // save to temp length
-        while(c != 20){ // 12. take bytes into length until whitespace
+        while(c != 32){ // 12. take bytes into length until whitespace
             char s = static_cast<char>(c);
             tmpLen += s;
             c = fgetc(fp);
         }
 
-        while(c == 20)c = fgetc(fp); // 13. skip whitespace until not whitespace
+        while(c == 32)c = fgetc(fp); // 13. skip whitespace until not whitespace
 
         for(int i = 0; i<6; i++){// 14. take in 6 bytes into address
-            c =fgetc(fp);
             char s = static_cast<char>(c);
             tmpAddr += s;
+            c =fgetc(fp);
         }
 
         // Save to literal
@@ -564,7 +569,7 @@ Literal* toLiteral(Literal* head, FILE *fp){
         tmpLen = "";
 
 
-        c = fgetc(fp); // c becomes '0A' && 15. go until another '0a' and test if you can read one more byte
+        while (c==32)c = fgetc(fp); // c becomes '0A' && 15. go until another '0a' and test if you can read one more byte
 
     }
 
@@ -588,5 +593,9 @@ int main(int argc, char* argv[]){
     symHead = toSymbol(symHead, fp);//pass to toSymbol
                             //check if next byte exists w/ while(!feof(fp)){}
     litHead = toLiteral(litHead, fp);
+
+    //cout << symHead->getValue() << endl;
+    //cout << symHead->getNext()->getValue() << endl;
+    cout << litHead->getAddress() << endl;
 
 }
