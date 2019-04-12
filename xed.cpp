@@ -363,16 +363,17 @@ class Symbol{
         char flag;
         string value;
         int decValue;
-        Symbol *next;
 
     public:
+        Symbol *next;
+
         Symbol(string nam, string val, char flg, Symbol *nextSym){
             this->name = nam;
             this->flag = flg;
             this->value = val;
             this->decValue = hexToDecimal(val);
             this->next = nextSym;
-            cout << this->name << ", " << this->value << ", " << this->flag << endl;
+            //cout << this->name << ", " << this->value << ", " << this->flag << endl;
         }
 
         char getFlag(){
@@ -385,10 +386,6 @@ class Symbol{
 
         int getDecValue(){
             return this->decValue;
-        }
-
-        Symbol* getNext(){
-            return this->next;
         }
 
         void setNext(Symbol *nextSym){
@@ -405,9 +402,11 @@ class Literal{
         string length;
         int decAddress;
         int decLength;
-        Literal *next;
+        
 
     public:
+        Literal *next;
+
         Literal(string nam, string addy, string len, Literal *nextLit){
             this->name = nam;
             this->address = addy;
@@ -415,7 +414,7 @@ class Literal{
             this->decAddress = hexToDecimal(addy);
             this->decLength = hexToDecimal(len);
             this->next = nextLit;
-            cout << this->name << ", " << this->address << ", " << this->length << endl;
+            //cout << this->name << ", " << this->address << ", " << this->length << endl;
         }
 
         string getAddress(){
@@ -432,10 +431,6 @@ class Literal{
 
         int getDecLength(){
             return this-> decLength;
-        }
-
-        Literal* getNext(){
-            return this->next;
         }
 
         void setNext(Literal *nextLit){
@@ -497,8 +492,9 @@ Symbol* toSymbol(Symbol* head, FILE *fp){
         c = fgetc(fp);//6. take next byte as a flag
         tmpFlag = static_cast<char>(c);
 
-        Symbol tmpSym(tmpName, tmpValue, tmpFlag, head);//6.5 create Symbol object and put in linked list backwards
-        head = &tmpSym;
+        Symbol *tmpSym = new Symbol(tmpName, tmpValue, tmpFlag, head);//6.5 create Symbol object and put in linked list backwards
+        head = tmpSym;
+        cout << tmpSym->next <<endl;
         tmpName = "";
         tmpValue = "";
 
@@ -519,7 +515,7 @@ Symbol* toSymbol(Symbol* head, FILE *fp){
         15. go until another '0a' and test if you can read one more byte
 */
 
-Literal* toLiteral(Literal* head, FILE *fp){
+Literal* toLiteral(Literal* &head, FILE *fp){
     int c = 0;
     string tmpName = "";
     string tmpAddr = "";
@@ -562,8 +558,8 @@ Literal* toLiteral(Literal* head, FILE *fp){
         }
 
         // Save to literal
-        Literal tmpLit(tmpName, tmpAddr, tmpLen, head);//6.5 create Literal object and put in linked list backwards
-        head = &tmpLit;
+        Literal *tmpLit = new Literal(tmpName, tmpAddr, tmpLen, head);//6.5 create Literal object and put in linked list backwards
+        head = tmpLit;
         tmpName = "";
         tmpAddr = "";
         tmpLen = "";
@@ -594,8 +590,8 @@ int main(int argc, char* argv[]){
                             //check if next byte exists w/ while(!feof(fp)){}
     litHead = toLiteral(litHead, fp);
 
-    //cout << symHead->getValue() << endl;
-    //cout << symHead->getNext()->getValue() << endl;
+    cout << symHead->getValue() << endl;
+    cout << symHead->next->getValue() << endl;
     cout << litHead->getAddress() << endl;
 
 }
