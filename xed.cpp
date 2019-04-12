@@ -468,7 +468,7 @@ Symbol* toSymbol(Symbol* head, FILE *fp){
 
     if(feof(fp))return head;
     for(int i = 0; i<2; i++){//1. iterate past first two '0a'
-         c = fgetc(fp);
+        c = fgetc(fp);
         if(c != 10) i--;
     }
 
@@ -518,7 +518,7 @@ Symbol* toSymbol(Symbol* head, FILE *fp){
 */
 
 Literal* toLiteral(Literal* head, FILE *fp){
-    int c;
+    int c = 0;
     string tmpName = "";
     string tmpAddr = "";
     string tmpLen = "";
@@ -584,8 +584,9 @@ int main(int argc, char* argv[]){
 
     Symbol *symHead = nullptr;//Create sym head and fp
     Literal *litHead = nullptr;
-    FILE *fp = fopen(objFile.c_str(), "r");
-    toSymbol(symHead, fp);//pass to toSymbol
+    FILE *fp = fopen(symFile.c_str(), "r");
+    symHead = toSymbol(symHead, fp);//pass to toSymbol
                             //check if next byte exists w/ while(!feof(fp)){}
+    litHead = toLiteral(litHead, fp);
 
 }
