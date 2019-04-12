@@ -595,7 +595,7 @@ int main(int argc, char* argv[]){
     cout << litHead->getAddress() << endl;
 
     // READING OBJ FILE BELOW
-    FILE *fpobj = fopen(objFile.c_str(), "r");
+    FILE *fpObj = fopen(objFile.c_str(), "r");
 
     /* READING FROM OBJ FILE
 
