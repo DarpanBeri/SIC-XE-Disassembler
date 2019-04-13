@@ -20,6 +20,7 @@
 #include <cstring>
 #include <cstdio>
 #include <sstream>
+#include <vector>
 
 using namespace std;
 /*
@@ -572,11 +573,31 @@ Literal* toLiteral(Literal* &head, FILE *fp){
     return head;
 }
 
-void readObj(FILE *fp){
+vector<string> readObj(FILE *fp){
+    vector<string> tmpVector;
+    string tmpHead = "";
     c = fgetc(fp);
     if(c != 72)gracefulExit("Fatal Error: no header record found in object file."); // No header record found
 
+    for(i=0; i<18; i++){ // Storing Header record in tmpHead
+        c= fgetc(fp);// At first character of the name
+        char s = static_cast<char>(c);
+        tmpHead += s;
+    }
+
+    tmpVector.push_back(tmpHead); // Header in 0th spot
+
+    while(c!=10)c=fgetc(fp); // Just in case
+    c = fgetc(fp);
     
+    while(c == 84){ // While in Text Record
+
+        for(i=0;i<9;i++)c=fgetc(fp); // skips first 9 characters in that line.
+
+        // First opcode instruction
+            // Figure out the format of opcode
+
+    }
 
 }
 
