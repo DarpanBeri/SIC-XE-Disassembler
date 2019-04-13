@@ -150,6 +150,216 @@ int hexToDecimal(string num){
     return x;
 }
 
+
+/*************************************************************
+ FUNCTION: formatFinder()
+ DESCRIPTION: Finds format of an instruction based off its 
+ opcode.
+ I/O:
+    input parameters: String
+    output: int.
+ *************************************************************/
+string formatFinder(string hex){
+    int x = hexToDecimal(hex);
+    x /= 4;
+
+    //Produces an error on 8C, CC, and E4
+    switch(x){//command library
+        case 0://00
+            return 3;
+            break;
+        case 1://04
+            return 3;
+            break;
+        case 2://08
+            return 3;
+            break;
+        case 3://0C
+            return 3;
+            break;
+        case 4://10
+            return 3;
+            break;
+        case 5://14
+            return 3;
+            break;
+        case 6://18
+            return 3;
+            break;
+        case 7://1C
+            return 3;
+            break;
+        case 8://20
+            return 3;
+            break;
+        case 9://24
+            return 3;
+            break;
+        case 10://28
+            return 3;
+            break;
+        case 11://2C
+            return 3;
+            break;
+        case 12://30
+            return 3;
+            break;
+        case 13://34
+            return 3;
+            break;
+        case 14://38
+            return 3;
+            break;
+        case 15://3C
+            return 3;
+            break;
+        case 16://40
+            return 3;
+            break;
+        case 17://44
+            return 3;
+            break;
+        case 18://48
+            return 3;
+            break;
+        case 19://4C
+            return 3;
+            break;
+        case 20://50
+            return 3;
+            break;
+        case 21://54
+            return 3;
+            break;
+        case 22://58
+            return 3;
+            break;
+        case 23://5C
+            return 3;
+            break;
+        case 24://60
+            return 3;
+            break;
+        case 25://64
+            return 3;
+            break;
+        case 26://68
+            return 3;
+            break;
+        case 27://6C
+            return 3;
+            break;
+        case 28://70
+            return 3;
+            break;
+        case 29://74
+            return 3;
+            break;
+        case 30://78
+            return 3;
+            break;
+        case 31://7C
+            return 3;
+            break;
+        case 32://80
+            return 3;
+            break;
+        case 33://84
+            return 3;
+            break;
+        case 34://88
+            return 3;
+            break;
+        case 35://8C
+            return 0;
+            break;
+        case 36://90
+            return 2;
+            break;
+        case 37://94
+            return 2;
+            break;
+        case 38://98
+            return 2;
+            break;
+        case 39://9C
+            return 2;
+            break;
+        case 40://A0
+            return 2;
+            break;
+        case 41://A4
+            return 2;
+            break;
+        case 42://A8
+            return 2;
+            break;
+        case 43://AC
+            return 2;
+            break;
+        case 44://B0
+            return 2;
+            break;
+        case 45://B4
+            return 2;
+            break;
+        case 46://B8
+            return 2;
+            break;
+        case 47://BC
+            return 0;
+            break;
+        case 48://C0
+            return 1;
+            break;
+        case 49://C4
+            return 1;
+            break;
+        case 50://C8
+            return 1;
+            break;
+        case 51://CC
+            return 0;
+            break;
+        case 52://D0
+            return 3;
+            break;
+        case 53://D4
+            return 3;
+            break;
+        case 54://D8
+            return 3;
+            break;
+        case 55://DC
+            return 3;
+            break;
+        case 56://E0
+            return 3;
+            break;
+        case 57://E4
+            return 0;
+            break;
+        case 58://E8
+            return 3;
+            break;
+        case 59://EC
+            return 3;
+            break;
+        case 60://F0
+            return 1;
+            break;
+        case 61://F4
+            return 1;
+            break;
+        case 62://F8
+            return 1;
+            break;
+    }
+
+    return "ERROR";
+}
+
+
 //Returns a 6 char string
 /*************************************************************
  FUNCTION: hexToCommand()
@@ -306,7 +516,7 @@ string hexToCommand(string hex){
             return "TIXR  ";
             break;
         case 47://BC
-            return "SUBR  ";
+            return "ERROR ";
             break;
         case 48://C0
             return "FLOAT ";
@@ -315,7 +525,7 @@ string hexToCommand(string hex){
             return "FIX   ";
             break;
         case 50://C8
-            return "OR    ";
+            return "NORM  ";
             break;
         case 51://CC
             return "ERROR ";
