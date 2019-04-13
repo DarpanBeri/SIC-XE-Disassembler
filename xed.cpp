@@ -784,18 +784,21 @@ Literal* toLiteral(Literal* &head, FILE *fp){
 }
 
 vector<string> readObj(FILE *fp){
+    
     vector<string> tmpVector;
-    string tmpHead = "";
+    string tmpVar = "";
+    int tmpFormat = 0;
+
     c = fgetc(fp);
     if(c != 72)gracefulExit("Fatal Error: no header record found in object file."); // No header record found
 
-    for(i=0; i<18; i++){ // Storing Header record in tmpHead
+    for(i=0; i<18; i++){ // Storing Header record in tmpVar
         c= fgetc(fp);// At first character of the name
         char s = static_cast<char>(c);
-        tmpHead += s;
+        tmpVar += s;
     }
 
-    tmpVector.push_back(tmpHead); // Header in 0th spot
+    tmpVector.push_back(tmpVar); // Header in 0th spot
 
     while(c!=10)c=fgetc(fp); // Just in case
     c = fgetc(fp);
@@ -805,7 +808,24 @@ vector<string> readObj(FILE *fp){
         for(i=0;i<9;i++)c=fgetc(fp); // skips first 9 characters in that line.
 
         // First opcode instruction
-            // Figure out the format of opcode
+        tmpVar = "";
+        for(i=0;i<2;i++){ // First 2 characters of first opcode in tmpVar to check format
+            char s = static_cast<char>(c);
+            tmpVar += s;
+            c=fgetc(fp);
+        }
+
+        tmpFormat = formatFinder(tmpVar);
+
+        if(tmpFormat == 3){
+
+        }
+        if(tmpFormat == 2){
+
+        }
+        if(tmpFormat == 1){
+
+        }
 
     }
 
