@@ -162,11 +162,12 @@ string nixbpeFinder(string hex){
     int y = hexToDecimal(hex.substr(2,1));//Last digit
     string tmpStr = "";
 
-    x %= 4
 
+    x %= 4
     if(x==3)tmpStr += "11";
     if(x==2)tmpStr += "10";
     if(x==1)tmpStr += "01";
+
 
     if(y>=8){
         y-=8;
@@ -188,6 +189,7 @@ string nixbpeFinder(string hex){
         tmpStr += "1";
     }
     else tmpStr += "0";
+
 
     return tmpStr;
 }
@@ -933,6 +935,8 @@ int main(int argc, char* argv[]){
     //Case 2: obj or sym file dne
     string objFile (argv[1]);
     string symFile = objFile + ".sym";
+    string sicFile = objFile + ".sic";
+    string lisFile = objFile + ".lis";
     objFile = objFile + ".obj";
     if(!fileExists(objFile))gracefulExit("Fatal Error: object file not found.");//exit()
     if(!fileExists(symFile))gracefulExit("Fatal Error: symbol file not found.");//exit()
@@ -953,7 +957,7 @@ int main(int argc, char* argv[]){
     // READING OBJ FILE BELOW
     FILE *fpObj = fopen(objFile.c_str(), "r");
     Vector<string> objectVector = readObj(fpObj);
-
+    closeFile(fpObj);
     /* READING FROM OBJ FILE
 
         Datastructure to store the info below:
@@ -978,6 +982,11 @@ int main(int argc, char* argv[]){
             a. Do nothing
     */
 
+    FILE* sfp = createFile(sicFile);
+
+
+
+    closeFile(sfp);
 
 
 }
