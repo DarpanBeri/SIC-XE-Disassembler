@@ -150,6 +150,48 @@ int hexToDecimal(string num){
     return x;
 }
 
+/*************************************************************
+ FUNCTION: nixbpeFinder(string hex)
+ DESCRIPTION: checks three nibbles for nixbpe bits
+ I/O:
+    input parameters: three hex characters
+    output: string.
+ *************************************************************/
+string nixbpeFinder(string hex){
+    int x = hexToDecimal(hex.substr(0,2));//First two digits
+    int y = hexToDecimal(hex.substr(2,1));//Last digit
+    string tmpStr = "";
+
+    x %= 4
+
+    if(x==3)tmpStr += "11";
+    if(x==2)tmpStr += "10";
+    if(x==1)tmpStr += "01";
+
+    if(y>=8){
+        y-=8;
+        tmpStr += "1";
+    }
+    else tmpStr += "0";
+    f(y>=4){
+        y-=4;
+        tmpStr += "1";
+    }
+    else tmpStr += "0";
+    f(y>=2){
+        y-=2;
+        tmpStr += "1";
+    }
+    else tmpStr += "0";
+    f(y>=1){
+        y-=1;
+        tmpStr += "1";
+    }
+    else tmpStr += "0";
+
+    return tmpStr;
+}
+
 
 /*************************************************************
  FUNCTION: formatFinder()
@@ -871,7 +913,7 @@ vector<string> readObj(FILE *fp){
 
 
     tmpVector.push_back("M");
-    while(c=='M'){//Modification record
+    while(c==77){//Modification record
         while(c!=10){
             c= fgetc(fp);
             char s = static_cast<char>(c);
@@ -879,6 +921,9 @@ vector<string> readObj(FILE *fp){
         }
         c= fgetc(fp);
     }
+
+    //End record check
+    if(c!=69) gracefulExit("Fatal Error: no end record found.");
 }
 
 int main(int argc, char* argv[]){
@@ -898,6 +943,8 @@ int main(int argc, char* argv[]){
     symHead = toSymbol(symHead, fp);//pass to toSymbol
                             //check if next byte exists w/ while(!feof(fp)){}
     litHead = toLiteral(litHead, fp);
+
+    closeFile(fp);
     /*
     cout << symHead->getValue() << endl;
     cout << symHead->next->getValue() << endl;
@@ -905,7 +952,7 @@ int main(int argc, char* argv[]){
     */
     // READING OBJ FILE BELOW
     FILE *fpObj = fopen(objFile.c_str(), "r");
-    readObj(fpObj);
+    Vector<string> objectVector = readObj(fpObj);
 
     /* READING FROM OBJ FILE
 
@@ -930,5 +977,7 @@ int main(int argc, char* argv[]){
         4. Check if the 1st character is E. Else ERROR, NO END RECORD.
             a. Do nothing
     */
+
+
 
 }
