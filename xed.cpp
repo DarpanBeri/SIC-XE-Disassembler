@@ -936,8 +936,40 @@ vector<string> readObj(FILE *fp){
     output: n/a
  *************************************************************/
 void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *litHead){
-
-}
+    //1) 1st Line of SIC File
+    //      a) Extract Title of program and immediatly put into file
+    //      b) Take first 6 characters to put directly into the program
+    //      c) Put in three spaces (32 dec) 
+    //      d) Put in START (83 84 65 82 84 dec)
+    //      e) Put in three spaces (32 dec) 
+    //      e) Put in starting address found in next six characters and insert 0A
+    //      f) Go next line in objvector
+    // 2) While Loop for machine instructions:
+    //      i)  save current address in temp var
+    //      ii) Pass address into a check for symtab and lit-tab coorespondance
+    //      iii)If there is in the symtab, then copy the name into the leftmost column (6 characters) and two space characters (32)
+    //      iv) If there is no symtab cooresponadance, put 8 spaces (32)
+    //      v)  Check to see if obj code is extended
+    //          a) do by passing first 3 characters into nixbpeFinder() function if its format 3 or 
+    //                 b) if it isn't format 3 or 4, put in a space
+    //      vi) Write in corresponding opcode from obj vector (6 characters) and space character
+    //      vii) Check to see if indirect or immediate
+    //              a) if indirect: add @
+    //              b) if immediate: add #
+    //              c) if both ticked: add space
+    //              d) If a literal address corresponds to current address, we copy the literal into this bit and we can skip step 8
+    //      viii) Put in the operand
+    //          a) Check to see if the operand cooresponds to anything in symtab or littab
+    //          b) Check to see if indexed
+    //              i) if it is, add ",X" to end of it
+    //          c) Add 0A
+    //3) While Loop for reservations:
+    //      i) Iterate accross symtab
+    //          a) Get difference between value stored and next value stored 
+    //              i) Reserve that many Bytes
+    //                  a) Place Symbol label in first 6 columns, followed by two spaces, and RESB and difference
+    //          a) For last symtab label, find difference between program length and address
+}       
 
 
 /*************************************************************
@@ -948,6 +980,7 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
     output: n/a
  *************************************************************/
 void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *litHead){
+  
 
 }
 
@@ -1003,6 +1036,7 @@ int main(int argc, char* argv[]){
             d. Go to 3.
         4. Check if the 1st character is E. Else ERROR, NO END RECORD.
             a. Do nothing
+            
     */
 
     FILE* sfp = createFile(sicFile);
