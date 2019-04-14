@@ -928,6 +928,29 @@ vector<string> readObj(FILE *fp){
     if(c!=69) gracefulExit("Fatal Error: no end record found.");
 }
 
+/*************************************************************
+ FUNCTION: writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *litHead)
+ DESCRIPTION: writes the sic file based on the info provided
+ I/O:
+    input parameters: FILE pointer, vector<string>, Symbol pointer, Literal pointer
+    output: n/a
+ *************************************************************/
+void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *litHead){
+
+}
+
+
+/*************************************************************
+ FUNCTION: writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *litHead)
+ DESCRIPTION: writes the sic file based on the info provided
+ I/O:
+    input parameters: FILE pointer, vector<string>, Symbol pointer, Literal pointer
+    output: n/a
+ *************************************************************/
+void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *litHead){
+
+}
+
 int main(int argc, char* argv[]){
     //Case 1: there are no arguments passed
     if(argc != 2)gracefulExit("Fatal Error: no filename given.");//exit()
