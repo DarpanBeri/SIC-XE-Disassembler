@@ -783,6 +783,13 @@ Literal* toLiteral(Literal* &head, FILE *fp){
     return head;
 }
 
+/*************************************************************
+ FUNCTION: readObj(FILE *fp)
+ DESCRIPTION: Reads the object file and transfers the information onto a vector<string>
+ I/O:
+    input parameters: Pointer to FILE struct
+    output: Vector<string>
+ *************************************************************/
 vector<string> readObj(FILE *fp){
     
     vector<string> tmpVector;
@@ -792,6 +799,8 @@ vector<string> readObj(FILE *fp){
     c = fgetc(fp);
     if(c != 72)gracefulExit("Fatal Error: no header record found in object file."); // No header record found
 
+
+    tmpVector.push_back("H");
     for(i=0; i<18; i++){ // Storing Header record in tmpVar
         c= fgetc(fp);// At first character of the name
         char s = static_cast<char>(c);
@@ -799,16 +808,19 @@ vector<string> readObj(FILE *fp){
     }
 
     tmpVector.push_back(tmpVar); // Header in 0th spot
+    tmpVar = "";
 
     while(c!=10)c=fgetc(fp); // Just in case
     c = fgetc(fp);
     
+
+    tmpVector.push_back("T");
     while(c == 84){ // While in Text Record
 
         for(i=0;i<9;i++)c=fgetc(fp); // skips first 9 characters in that line.
 
         // First opcode instruction
-        tmpVar = "";
+        
         for(i=0;i<2;i++){ // First 2 characters of first opcode in tmpVar to check format
             char s = static_cast<char>(c);
             tmpVar += s;
@@ -816,19 +828,57 @@ vector<string> readObj(FILE *fp){
         }
 
         tmpFormat = formatFinder(tmpVar);
+        
+        while(c!=10){
+            if(tmpFormat == 3){
+                int j = 3;
 
-        if(tmpFormat == 3){
+                char s = static_cast<char>(c);//Check next nibble
+                tmpVar += s;
+                c=fgetc(fp);
 
+                if(s == '1'||s == '3'||s == '5'||s == '7'||s == '9'||s == 'B'||s == 'D'||s == 'F')//Format 4
+                    j=5;
+            
+                for(int i=0; i<j; i++){//Store given number of nibbles
+                    s= static_cast<char>(c);
+                    tmpVar += s;
+                    c=fgetc(fp)
+                }
+                tmpVector.push_back(tmpVar);//Storing in opcode
+                tmpVar = "";
+
+            }
+            if(tmpFormat == 2){
+                char s = static_cast<char>(c);//Need one more byte
+                tmpVar += s;
+                c=fgetc(fp);
+
+                s = static_cast<char>(c);
+                tmpVar += s;
+                c=fgetc(fp);
+
+                tmpVector.push_back(tmpVar);//Storing in opcode
+                tmpVar = "";
+            }
+            if(tmpFormat == 1){
+                tmpVector.push_back(tmpVar);//Storing in opcode
+                tmpVar = "";
+            }
         }
-        if(tmpFormat == 2){
-
-        }
-        if(tmpFormat == 1){
-
-        }
-
+        c=fgetc(fp);
     }
 
+
+    tmpVector.push_back("M");
+    while(c=='M'){//Modification record
+        while(c!=10){
+            c= fgetc(fp);
+            char s = static_cast<char>(c);
+            tmpVar += s;
+        }
+        c= fgetc(fp);
+    }
 }
 
 int main(int argc, char* argv[]){
