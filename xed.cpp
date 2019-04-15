@@ -646,6 +646,10 @@ class Symbol{
         void setNext(Symbol *nextSym){
             this->next = nextSym;
         }
+        
+        string getName(){
+            return this->name;
+        }
 
 };
 
@@ -952,6 +956,34 @@ vector<string> readObj(FILE *fp){
     output: n/a
  *************************************************************/
 void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *litHead){
+    //Instets 1st line of SIC program
+    fprintf(fp, "%s", objVector[1].substr(0,6).c_str());
+    fprintf(fp, "   START   ");
+    fputc(10, fp);
+     
+    //Text records
+    int index = 3;
+    int address = 0;
+    Symbol *symPtr = *symHead;
+    Literal *litPtr = *litHead;
+    while(objVector[index] != "M"){
+        address = objVector[index];
+        if(symPtr->getDecValue() == address){
+            fprintf(fp, "%s  ", symPtr->getName());
+        }
+        else(fprintf(fp, "        "));
+       
+        string nixbpeStr = nixbpeFinder(objVector[index].substr(0,3));
+        if(nixbpeStr.substr(5,1) == "1") fprintf(fp, "+");
+        
+        if(nixbpeStr.substr(0,1) == "0") fprintf(fp, "#");
+       
+        else if(nixbpeStr.substr(1,1) == "1") fprintf(fp, "@");
+        
+        else(fprintf(fp," "));
+        
+    }
+    
     //1) 1st Line of SIC File
     //      a) Extract Title of program and immediatly put into file
     //      b) Take first 6 characters to put directly into the program
