@@ -163,7 +163,7 @@ string nixbpeFinder(string hex){
     string tmpStr = "";
 
 
-    x %= 4
+    x %= 4;
     if(x==3)tmpStr += "11";
     if(x==2)tmpStr += "10";
     if(x==1)tmpStr += "01";
@@ -174,17 +174,17 @@ string nixbpeFinder(string hex){
         tmpStr += "1";
     }
     else tmpStr += "0";
-    f(y>=4){
+    if(y>=4){
         y-=4;
         tmpStr += "1";
     }
     else tmpStr += "0";
-    f(y>=2){
+    if(y>=2){
         y-=2;
         tmpStr += "1";
     }
     else tmpStr += "0";
-    f(y>=1){
+    if(y>=1){
         y-=1;
         tmpStr += "1";
     }
@@ -203,7 +203,7 @@ string nixbpeFinder(string hex){
     input parameters: String
     output: int.
  *************************************************************/
-string formatFinder(string hex){
+int formatFinder(string hex){
     int x = hexToDecimal(hex);
     x /= 4;
 
@@ -400,7 +400,7 @@ string formatFinder(string hex){
             break;
     }
 
-    return "ERROR";
+    return 0;
 }
 
 
@@ -747,9 +747,14 @@ Symbol* toSymbol(Symbol* head, FILE *fp){
         c = fgetc(fp);//6. take next byte as a flag
         tmpFlag = static_cast<char>(c);
 
-        Symbol *tmpSym = new Symbol(tmpName, tmpValue, tmpFlag, head);//6.5 create Symbol object and put in linked list backwards
-        head = tmpSym;
-        cout << tmpSym->next <<endl;
+        Symbol *tmpSym = new Symbol(tmpName, tmpValue, tmpFlag, nullptr);//6.5 create Symbol object
+        if(head == nullptr) head = tmpSym;
+        else{
+            Symbol *symPtr = head;
+            while(symPtr->next !=nullptr) symPtr = symPtr->next;
+            symPtr->next = tmpSym;
+        }
+        //cout << tmpSym->next <<endl;
         tmpName = "";
         tmpValue = "";
 
@@ -813,7 +818,13 @@ Literal* toLiteral(Literal* &head, FILE *fp){
         }
 
         // Save to literal
-        Literal *tmpLit = new Literal(tmpName, tmpAddr, tmpLen, head);//6.5 create Literal object and put in linked list backwards
+        Literal *tmpLit = new Literal(tmpName, tmpAddr, tmpLen, nullptr);//6.5 create Literal object
+        if(head == nullptr) head = tmpLit;
+        else{
+            Literal *litPtr = head;
+            while(litPtr->next !=nullptr) litPtr = litPtr->next;
+            litPtr->next = tmpLit;
+        }
         head = tmpLit;
         tmpName = "";
         tmpAddr = "";
@@ -840,12 +851,12 @@ vector<string> readObj(FILE *fp){
     string tmpVar = "";
     int tmpFormat = 0;
 
-    c = fgetc(fp);
+    int c = fgetc(fp);
     if(c != 72)gracefulExit("Fatal Error: no header record found in object file."); // No header record found
 
 
     tmpVector.push_back("H");
-    for(i=0; i<18; i++){ // Storing Header record in tmpVar
+    for(int i=0; i<18; i++){ // Storing Header record in tmpVar
         c= fgetc(fp);// At first character of the name
         char s = static_cast<char>(c);
         tmpVar += s;
@@ -861,19 +872,19 @@ vector<string> readObj(FILE *fp){
     tmpVector.push_back("T");
     while(c == 84){ // While in Text Record
 
-        for(i=0;i<9;i++)c=fgetc(fp); // skips first 9 characters in that line.
+        for(int i=0;i<9;i++)c=fgetc(fp); // skips first 9 characters in that line.
 
-        // First opcode instruction
         
-        for(i=0;i<2;i++){ // First 2 characters of first opcode in tmpVar to check format
-            char s = static_cast<char>(c);
-            tmpVar += s;
-            c=fgetc(fp);
-        }
+        while(c!=10){// First opcode instruction
+            for(int i=0;i<2;i++){ // First 2 characters of first opcode in tmpVar to check format
+                char s = static_cast<char>(c);
+                tmpVar += s;
+                c=fgetc(fp);
+            }
 
-        tmpFormat = formatFinder(tmpVar);
+            tmpFormat = formatFinder(tmpVar);
         
-        while(c!=10){
+        
             if(tmpFormat == 3){
                 int j = 3;
 
@@ -887,7 +898,7 @@ vector<string> readObj(FILE *fp){
                 for(int i=0; i<j; i++){//Store given number of nibbles
                     s= static_cast<char>(c);
                     tmpVar += s;
-                    c=fgetc(fp)
+                    c=fgetc(fp);
                 }
                 tmpVector.push_back(tmpVar);//Storing in opcode
                 tmpVar = "";
@@ -916,16 +927,21 @@ vector<string> readObj(FILE *fp){
 
     tmpVector.push_back("M");
     while(c==77){//Modification record
+        c= fgetc(fp);
         while(c!=10){
-            c= fgetc(fp);
             char s = static_cast<char>(c);
             tmpVar += s;
+            c= fgetc(fp);
         }
+        tmpVector.push_back(tmpVar);
+        tmpVar = "";
         c= fgetc(fp);
     }
 
     //End record check
     if(c!=69) gracefulExit("Fatal Error: no end record found.");
+
+    return tmpVector;
 }
 
 /*************************************************************
@@ -1012,8 +1028,9 @@ int main(int argc, char* argv[]){
     */
     // READING OBJ FILE BELOW
     FILE *fpObj = fopen(objFile.c_str(), "r");
-    Vector<string> objectVector = readObj(fpObj);
+    vector<string> objectVector = readObj(fpObj);
     closeFile(fpObj);
+
     /* READING FROM OBJ FILE
 
         Datastructure to store the info below:
@@ -1042,8 +1059,11 @@ int main(int argc, char* argv[]){
     FILE* sfp = createFile(sicFile);
 
 
-
     closeFile(sfp);
+
+    
+
+    return 0;
 
 
 }
