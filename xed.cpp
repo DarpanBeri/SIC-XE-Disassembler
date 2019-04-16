@@ -1049,6 +1049,9 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
         else if(nixbpeStr.substr(1,1)=="0") fputc(64, fp);
         else fputc(32, fp);
 
+        //Columns 18-35
+        
+
         address += objVector[index++].length()/2;
 
     }
