@@ -919,6 +919,7 @@ vector<string> readObj(FILE *fp, Symbol *symHead, Literal *litHead){
             
                 tmpVector.push_back(tmpVar);
                 tmpVar="";
+                address += litHead->getDecLength()/2;
                 litHead = litHead->next;
                 continue;
             }
@@ -1020,19 +1021,25 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
     Symbol *symPtr = symHead;
     Literal *litPtr = litHead;
     while(objVector[index] != "M"){
+
+        //First 8 columns(1 based)
         if(symPtr->getDecValue() == address) fprintf(fp, "%s  ", symPtr->getName().c_str());
         else fprintf(fp, "        ");
-        
-        if(formatFinder(objVector[index].substr(0,2))==3){
 
+        //Column 9(1 based)
+        if(formatFinder(objVector[index].substr(0,2))==3){
             string nixbpeStr = nixbpeFinder(objVector[index].substr(0,3));
-            if(nixbpeStr.substr(5,1) == "1") fprintf(fp, "+");
-        
-            if(nixbpeStr.substr(0,1) == "0") fprintf(fp, "#");
-       
-            else if(nixbpeStr.substr(1,1) == "1") fprintf(fp, "@");
-        
+            if(nixbpeStr.substr(5,1) == "1") fprintf(fp, "+");//extended
+            else if(nixbpeStr.substr(0,1) == "0") fprintf(fp, "#");//inderect
+            else if(nixbpeStr.substr(1,1) == "0") fprintf(fp, "@");//immediate
             else fprintf(fp," ");
+        }else fprintf(fp, " ");
+
+        address += objVector[index]/2;
+
+        //Columns 10-16(1 based)
+        if(litPtr->getDecAddress()==address){
+            
         }
     }
     
