@@ -1059,6 +1059,77 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
                 * If format 2, interpret the next 2 nibbles  of the opcode and put the corresponding register to the correct spots and add in 0A.
                 * Format 1, do nothing and add 0A.
         */
+        if(formatFinder(objVector[index].substr(0,2))==3){//3/4
+
+        }
+        else if(formatFinder(objVector[index].substr(0,2))==2){//2
+            int x = hexToDecimal(objVector[index].substr(2,1));
+            switch(x){
+                case 0:
+                    fprintf(fp, "A");
+                    break;
+                case 1:
+                    fprintf(fp, "X");
+                    break;
+                case 2:
+                    fprintf(fp, "L");
+                    break;
+                case 3:
+                    fprintf(fp, "B");
+                    break;
+                case 4:
+                    fprintf(fp, "S");
+                    break;
+                case 5:
+                    fprintf(fp, "T");
+                    break;
+                case 6:
+                    fprintf(fp, "F");
+                    break;
+                case 8:
+                    fprintf(fp, "PC");
+                    break;
+                case 9:
+                    fprintf(fp, "SW");
+                    break;
+            }
+            if(objVector[index].substr(0,2)!="B0"&&objVector[index].substr(0,2)!="B4"&&objVector[index].substr(0,2)!="B8"){
+                x = hexToDecimal(objVector[index].substr(3,1));
+                switch(x){
+                    case 0:
+                        fprintf(fp, ",A");
+                        break;
+                    case 1:
+                        fprintf(fp, ",X");
+                        break;
+                    case 2:
+                        fprintf(fp, ",L");
+                        break;
+                    case 3:
+                        fprintf(fp, ",B");
+                        break;
+                    case 4:
+                        fprintf(fp, ",S");
+                        break;
+                    case 5:
+                        fprintf(fp, ",T");
+                        break;
+                    case 6:
+                        fprintf(fp, ",F");
+                        break;
+                    case 8:
+                        fprintf(fp, ",PC");
+                        break;
+                    case 9:
+                        fprintf(fp, ",SW");
+                        break;
+                }
+            }
+            fputc(10, fp);
+        }
+        else if(formatFinder(objVector[index].substr(0,2))==1){//1
+            fputc(10, fp);
+        }
 
 
         address += objVector[index++].length()/2;
