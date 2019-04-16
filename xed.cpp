@@ -194,6 +194,28 @@ string nixbpeFinder(string hex){
     return tmpStr;
 }
 
+/*************************************************************
+ FUNCTION: opcodeValid()
+ DESCRIPTION: Checks if the given opcode is valid
+ I/O:
+    input parameters: hex String
+    output: boolean
+ *************************************************************/
+bool opcodeValid(string hex){
+    
+    string nixbpe = nixbpeFinder(hex);//Note-- only works on 3 hex digits
+    
+    if(nixbpe.substr(0,2)=="00") return false;
+    if(nixbpe.substr(0,1)=="0" || nixbpe.substr(1,1)=="0")
+        if(nixbpe.substr(2,1)=="1")return false;
+    if(nixbpe.substr(3,1)=="1" && (nixbpe.substr(4,1)=="1" || nixbpe.substr(5,1)=="1")) return false;
+    if(nixbpe.substr(4,1)=="1" && nixbpe.substr(5,1)=="1") return false;
+    
+    
+    
+    return true;
+}
+
 
 /*************************************************************
  FUNCTION: formatFinder()
@@ -849,11 +871,12 @@ Literal* toLiteral(Literal* &head, FILE *fp){
     input parameters: Pointer to FILE struct
     output: Vector<string>
  *************************************************************/
-vector<string> readObj(FILE *fp){
+vector<string> readObj(FILE *fp, Symbol *symHead, Literal *litHead){
     
     vector<string> tmpVector;
     string tmpVar = "";
     int tmpFormat = 0;
+    int address = 0;
 
     int c = fgetc(fp);
     if(c != 72)gracefulExit("Fatal Error: no header record found in object file."); // No header record found
@@ -865,6 +888,8 @@ vector<string> readObj(FILE *fp){
         char s = static_cast<char>(c);
         tmpVar += s;
     }
+
+    address = hexToDecimal(tmpVar.substr(6,6));//Initialize address to the start of program
 
     tmpVector.push_back(tmpVar); // Header in 0th spot
     tmpVar = "";
@@ -880,6 +905,20 @@ vector<string> readObj(FILE *fp){
 
         
         while(c!=10){// First opcode instruction
+            
+            if(litHead!=nullptr && litHead->getDecAddress() < address){//Literal (LTORG)
+                for(int i=0; i < litHead->getDecLength();i++){
+                    char s = static_cast<char>(c);
+                    tmpVar += s;
+                    c=fgetc(fp);
+                }
+            
+                tmpVector.push_back(tmpVar);
+                tmpVar="";
+                litHead = litHead->next;
+                continue;
+            }
+            
             for(int i=0;i<2;i++){ // First 2 characters of first opcode in tmpVar to check format
                 char s = static_cast<char>(c);
                 tmpVar += s;
@@ -889,15 +928,22 @@ vector<string> readObj(FILE *fp){
             tmpFormat = formatFinder(tmpVar);
         
         
-            if(tmpFormat == 3){
+            if(tmpFormat == 3){//Format 3/4
                 int j = 3;
 
                 char s = static_cast<char>(c);//Check next nibble
                 tmpVar += s;
                 c=fgetc(fp);
 
-                if(s == '1'||s == '3'||s == '5'||s == '7'||s == '9'||s == 'B'||s == 'D'||s == 'F')//Format 4
+                if(!opcodeValid(tmpVar)){//Check for invalid nixbpe
+                    /*
+                        if invalid then this has to be a 
+                    */
+                }
+                else if(s == '1'||s == '3'||s == '5'||s == '7'||s == '9'||s == 'B'||s == 'D'||s == 'F'){//Format 4
                     j=5;
+                    address+=1;
+                }
             
                 for(int i=0; i<j; i++){//Store given number of nibbles
                     s= static_cast<char>(c);
@@ -906,9 +952,9 @@ vector<string> readObj(FILE *fp){
                 }
                 tmpVector.push_back(tmpVar);//Storing in opcode
                 tmpVar = "";
-
+                address+=3;
             }
-            if(tmpFormat == 2){
+            else if(tmpFormat == 2){//Format 2
                 char s = static_cast<char>(c);//Need one more byte
                 tmpVar += s;
                 c=fgetc(fp);
@@ -919,10 +965,12 @@ vector<string> readObj(FILE *fp){
 
                 tmpVector.push_back(tmpVar);//Storing in opcode
                 tmpVar = "";
+                address+=2;
             }
-            if(tmpFormat == 1){
+            else if(tmpFormat == 1){//Format 1
                 tmpVector.push_back(tmpVar);//Storing in opcode
                 tmpVar = "";
+                address+=1;
             }
         }
         c=fgetc(fp);
@@ -959,17 +1007,18 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
     //Instets 1st line of SIC program
     fprintf(fp, "%s", objVector[1].substr(0,6).c_str());
     fprintf(fp, "   START   ");
+    fprintf(fp, "%s", objVector[1].substr(6,6).c_str());
     fputc(10, fp);
      
     //Text records
     int index = 3;
     int address = 0;
-    Symbol *symPtr = *symHead;
-    Literal *litPtr = *litHead;
+    Symbol *symPtr = symHead;
+    Literal *litPtr = litHead;
     while(objVector[index] != "M"){
-        address = objVector[index];
+        address = hexToDecimal(objVector[1].substr(6,6));
         if(symPtr->getDecValue() == address){
-            fprintf(fp, "%s  ", symPtr->getName());
+            fprintf(fp, "%s  ", symPtr->getName().c_str());
         }
         else(fprintf(fp, "        "));
        
@@ -1060,7 +1109,7 @@ int main(int argc, char* argv[]){
     */
     // READING OBJ FILE BELOW
     FILE *fpObj = fopen(objFile.c_str(), "r");
-    vector<string> objectVector = readObj(fpObj);
+    vector<string> objectVector = readObj(fpObj, symHead, litHead);
     closeFile(fpObj);
 
     /* READING FROM OBJ FILE
