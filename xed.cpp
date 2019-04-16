@@ -1020,6 +1020,7 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
     int address = hexToDecimal(objVector[1].substr(6,6));;
     Symbol *symPtr = symHead;
     Literal *litPtr = litHead;
+    string nixbpeStr = "";
     while(objVector[index] != "M"){
 
         //First 8 columns(1 based)
@@ -1027,20 +1028,29 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
         else fprintf(fp, "        ");
 
         //Column 9(1 based)
-        if(formatFinder(objVector[index].substr(0,2))==3){
-            string nixbpeStr = nixbpeFinder(objVector[index].substr(0,3));
+        if(formatFinder(objVector[index].substr(0,2))==3 && opcodeValid(objVector[index].substr(0,2))){
+            nixbpeStr = nixbpeFinder(objVector[index].substr(0,3));
             if(nixbpeStr.substr(5,1) == "1") fprintf(fp, "+");//extended
-            else if(nixbpeStr.substr(0,1) == "0") fprintf(fp, "#");//inderect
-            else if(nixbpeStr.substr(1,1) == "0") fprintf(fp, "@");//immediate
             else fprintf(fp," ");
         }else fprintf(fp, " ");
 
-        address += objVector[index].length()/2;
-
         //Columns 10-16(1 based)
-        if(litPtr->getDecAddress()==address){
-            
+        if(litPtr->getDecAddress()<address){
+            fprintf(fp, "LITORG ");
+            fputc(10, fp);
+            address += objVector[index++].length()/2;
+            continue;
         }
+        fprintf(fp, "%s ", hexToCommand(objVector[index].subtr(0,2))//General case
+
+        //Column 17
+        nixbpeStr = nixbpeFinder(objVector[index].substr(0,3));
+        if(nixbpeStr.subtr(0,1)=="0") fputc(35, fp);
+        else if(nixbpeStr.substr(1,1)=="0") fputc(64, fp);
+        else fputc(32, fp);
+
+        address += objVector[index++].length()/2;
+
     }
     
     //1) 1st Line of SIC File
@@ -1149,6 +1159,7 @@ int main(int argc, char* argv[]){
 
     FILE* sfp = createFile(sicFile);
 
+    writeSicFile(sfp, objectVector, symHead, litHead);
 
     closeFile(sfp);
 
