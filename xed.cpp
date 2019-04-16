@@ -1041,7 +1041,7 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
             address += objVector[index++].length()/2;
             continue;
         }
-        fprintf(fp, "%s ", hexToCommand(objVector[index].substr(0,2)); // General case
+        fprintf(fp, "%s ", hexToCommand(objVector[index].substr(0,2))); // General case
 
         //Column 17
         nixbpeStr = nixbpeFinder(objVector[index].substr(0,3));
@@ -1051,7 +1051,7 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
 
         //Columns 18-35
         /*
-            We have to determin
+            We have to determine the address from the sym
         */
 
         address += objVector[index++].length()/2;
