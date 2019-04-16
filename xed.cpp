@@ -1041,7 +1041,7 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
             address += objVector[index++].length()/2;
             continue;
         }
-        fprintf(fp, "%s ", hexToCommand(objVector[index].subtr(0,2))//General case
+        fprintf(fp, "%s ", hexToCommand(objVector[index].substr(0,2))//General case
 
         //Column 17
         nixbpeStr = nixbpeFinder(objVector[index].substr(0,3));
@@ -1050,7 +1050,9 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
         else fputc(32, fp);
 
         //Columns 18-35
-        
+        /*
+
+        */
 
         address += objVector[index++].length()/2;
 
