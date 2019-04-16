@@ -1016,25 +1016,24 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
      
     //Text records
     int index = 3;
-    int address = 0;
+    int address = hexToDecimal(objVector[1].substr(6,6));;
     Symbol *symPtr = symHead;
     Literal *litPtr = litHead;
     while(objVector[index] != "M"){
-        address = hexToDecimal(objVector[1].substr(6,6));
-        if(symPtr->getDecValue() == address){
-            fprintf(fp, "%s  ", symPtr->getName().c_str());
+        if(symPtr->getDecValue() == address) fprintf(fp, "%s  ", symPtr->getName().c_str());
+        else fprintf(fp, "        ");
+        
+        if(formatFinder(objVector[index].substr(0,2))==3){
+
+            string nixbpeStr = nixbpeFinder(objVector[index].substr(0,3));
+            if(nixbpeStr.substr(5,1) == "1") fprintf(fp, "+");
+        
+            if(nixbpeStr.substr(0,1) == "0") fprintf(fp, "#");
+       
+            else if(nixbpeStr.substr(1,1) == "1") fprintf(fp, "@");
+        
+            else fprintf(fp," ");
         }
-        else(fprintf(fp, "        "));
-       
-        string nixbpeStr = nixbpeFinder(objVector[index].substr(0,3));
-        if(nixbpeStr.substr(5,1) == "1") fprintf(fp, "+");
-        
-        if(nixbpeStr.substr(0,1) == "0") fprintf(fp, "#");
-       
-        else if(nixbpeStr.substr(1,1) == "1") fprintf(fp, "@");
-        
-        else(fprintf(fp," "));
-        
     }
     
     //1) 1st Line of SIC File
