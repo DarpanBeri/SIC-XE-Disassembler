@@ -1041,17 +1041,17 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
             address += objVector[index++].length()/2;
             continue;
         }
-        fprintf(fp, "%s ", hexToCommand(objVector[index].substr(0,2))//General case
+        fprintf(fp, "%s ", hexToCommand(objVector[index].substr(0,2)); // General case
 
         //Column 17
         nixbpeStr = nixbpeFinder(objVector[index].substr(0,3));
-        if(nixbpeStr.subtr(0,1)=="0") fputc(35, fp);
+        if(nixbpeStr.substr(0,1)=="0") fputc(35, fp);
         else if(nixbpeStr.substr(1,1)=="0") fputc(64, fp);
         else fputc(32, fp);
 
         //Columns 18-35
         /*
-
+            We have to determin
         */
 
         address += objVector[index++].length()/2;
