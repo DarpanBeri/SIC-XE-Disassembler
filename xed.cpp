@@ -1035,7 +1035,7 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
             else fprintf(fp," ");
         }else fprintf(fp, " ");
 
-        address += objVector[index]/2;
+        address += objVector[index].length/2;
 
         //Columns 10-16(1 based)
         if(litPtr->getDecAddress()==address){
