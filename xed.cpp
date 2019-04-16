@@ -717,6 +717,10 @@ class Literal{
         void setNext(Literal *nextLit){
             this->next = nextLit;
         }
+
+        string getName(){
+            return this->name;
+        }
 };
 
 //Reading symtab
