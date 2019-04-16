@@ -1051,8 +1051,15 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
 
         //Columns 18-35
         /*
-            We have to determine the address from the symtable. We need 
+            We have to determine the address from the symtable. We know if its a direct address, immediate address, base relative or pc relative etc.
+            We dont know if exactly where the BASE assembler directive would be. If LDB is every given, we can very well assume that the very next instruction is going to be to base relative.
+            Take opcode and check the format.
+            Depending of the format, the structure will change:
+                * If Format 3 and 4 a lot of bs
+                * If format 2, interpret the next 2 nibbles  of the opcode and put the corresponding register to the correct spots and add in 0A.
+                * Format 1, do nothing and add 0A.
         */
+
 
         address += objVector[index++].length()/2;
 
