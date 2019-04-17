@@ -1040,7 +1040,7 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
 
         //Columns 10-16(1 based)
         if(litPtr!=nullptr && litPtr->getDecAddress()<address){
-            fprintf(fp, "LITORG ");
+            fprintf(fp, "LTORG  ");
             fputc(10, fp);
             address += objVector[index++].length()/2;
             litPtr = litPtr->next;
