@@ -1018,13 +1018,17 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
     //Text records
     int index = 3;
     int address = hexToDecimal(objVector[1].substr(6,6));;
+    int baseAddress = 0;
     Symbol *symPtr = symHead;
     Literal *litPtr = litHead;
     string nixbpeStr = "";
     while(objVector[index] != "M"){
 
         //First 8 columns(1 based)
-        if(symPtr->getDecValue() == address) fprintf(fp, "%s  ", symPtr->getName().c_str());
+        if(symPtr != nullptr && symPtr->getDecValue() == address){
+            fprintf(fp, "%s  ", symPtr->getName().c_str());
+            symPtr = symPtr->next;
+        }
         else fprintf(fp, "        ");
 
         //Column 9(1 based)
@@ -1035,19 +1039,22 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
         }else fprintf(fp, " ");
 
         //Columns 10-16(1 based)
-        if(litPtr->getDecAddress()<address){
+        if(litPtr!=nullptr && litPtr->getDecAddress()<address){
             fprintf(fp, "LITORG ");
             fputc(10, fp);
             address += objVector[index++].length()/2;
+            litPtr = litPtr->next;
             continue;
         }
         fprintf(fp, "%s ", hexToCommand(objVector[index].substr(0,2)).c_str()); // General case
 
         //Column 17
-        nixbpeStr = nixbpeFinder(objVector[index].substr(0,3));
-        if(nixbpeStr.substr(0,1)=="0") fputc(35, fp);
-        else if(nixbpeStr.substr(1,1)=="0") fputc(64, fp);
-        else fputc(32, fp);
+        if(formatFinder(objVector[index].substr(0,2))==3){
+            nixbpeStr = nixbpeFinder(objVector[index].substr(0,3));
+            if(nixbpeStr.substr(0,1)=="0") fputc(35, fp);
+            else if(nixbpeStr.substr(1,1)=="0") fputc(64, fp);
+            else fputc(32, fp);
+        }
 
         //Columns 18-35
         /*
@@ -1059,10 +1066,21 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
                 * If format 2, interpret the next 2 nibbles  of the opcode and put the corresponding register to the correct spots and add in 0A.
                 * Format 1, do nothing and add 0A.
         */
-        if(formatFinder(objVector[index].substr(0,2))==3){//3/4
+        if(formatFinder(objVector[index].substr(0,2))==3){//Format 3/4
+            //THIS IS FILLER FOR NOW
+            //THIS IS FILLER FOR NOW
+            //THIS IS FILLER FOR NOW
+            
+            //this is the filler section
+            if(nixbpeStr.substr(5,1)=="0")fprintf(fp, "%s", objVector[index].substr(3,3).c_str());
+            else fprintf(fp, "%s", objVector[index].substr(3,5).c_str());
+            //end filler
 
+            if(nixbpeStr.substr(2,1)=="1") fprintf(fp, ",X");
+
+            fputc(10, fp);
         }
-        else if(formatFinder(objVector[index].substr(0,2))==2){//2
+        else if(formatFinder(objVector[index].substr(0,2))==2){//Format 2
             int x = hexToDecimal(objVector[index].substr(2,1));
             switch(x){
                 case 0:
@@ -1127,7 +1145,7 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
             }
             fputc(10, fp);
         }
-        else if(formatFinder(objVector[index].substr(0,2))==1){//1
+        else if(formatFinder(objVector[index].substr(0,2))==1){//Format 1
             fputc(10, fp);
         }
 
