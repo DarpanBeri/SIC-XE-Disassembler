@@ -723,6 +723,22 @@ class Literal{
         }
 };
 
+/*************************************************************
+ FUNCTION: addressInSymtab(Symbol *symPtr, string address)
+ DESCRIPTION: Reads the object file and transfers the information onto a vector<string>
+ I/O:
+    input parameters: Pointer to sym linked list, checking address(6 char string)
+    output: symbol pointer
+ NOTE: only designed to work with 6 character strings for address arg.
+ *************************************************************/
+Symbol* findAddressInSymtab(Symbol *symPtr, string address){
+    while(symPtr!=nullptr){
+        if(symPtr->getValue() == address)return symPtr;
+        symPtr = symPtr->next;
+    }
+    return symPtr;
+}
+
 //Reading symtab
     /**
         1. iterate past first two '0a'
