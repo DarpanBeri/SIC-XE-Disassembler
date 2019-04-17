@@ -135,7 +135,7 @@ bool closeFile(FILE* fp){
 
 /*************************************************************
  FUNCTION: hexToDecimal()
- DESCRIPTION: Converts hex to Decimal
+ DESCRIPTION: Converts hex to decimal
  I/O:
     input parameters: String
     output: Integer
@@ -148,6 +148,25 @@ int hexToDecimal(string num){
     ss >> x;
 
     return x;
+}
+
+/*************************************************************
+ FUNCTION: decimalToHex()
+ DESCRIPTION: Converts decimal to hex
+ I/O:
+    input parameters: int num
+    output: string hex
+ *************************************************************/
+
+string decimalToHex(int num){
+    stringstream ss;
+
+    ss << hex << num;
+    
+    string s (ss.str());
+    while(s.length() < 6) s = "0"+s;
+    if(s.length() > 6) s = s.substr(s.length()-6,6);
+    return s;
 }
 
 /*************************************************************
@@ -1079,7 +1098,6 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
             if(nixbpeStr.substr(5,1)=="1") checkNibbles = 5;
             else if(nixbpeStr.substr(4,1)=="1") checkAddress = address;
             else if(nixbpeStr.substr(3,1)=="1") checkAddress = baseAddress;
-            cout << "LDB found at address" + address << endl;
             
         }
 
@@ -1100,13 +1118,18 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
             
             //this is the filler section
             if(nixbpeStr.substr(5,1)=="0"){
+                int tmpAddress = -1;
                 //fprintf(fp, "%s", objVector[index].substr(3,3).c_str());
                 if(nixbpeStr.substr(4,1)=="1"){//PC Relative
                     
                 }
                 else if(nixbpeStr.substr(3,1)=="1"){//Base Relative
                     
-                }//end filler
+                }else tmpAddress = hexToDecimal(objVector[index].substr(3,3));
+                //end filler
+                Symbol *tmpSymPtr = findAddressInSymtab(symHead, decimalToHex(tmpAddress));
+                if(tmpSymPtr != nullptr)fprintf(fp, "%s", tmpSymPtr->getName().c_str());
+                else fprintf(fp, "%s", objVector[index].substr(3,3).c_str());
             }
             else {
                 Symbol *tmpSymPtr = findAddressInSymtab(symHead, "0"+objVector[index].substr(3,5));
