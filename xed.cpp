@@ -958,7 +958,7 @@ vector<string> readObj(FILE *fp, Symbol *symHead, Literal *litHead){
 
                 if(!opcodeValid(tmpVar)){//Check for invalid nixbpe
                     /*
-                        if invalid then this has to be a 
+                        if invalid then this has to be a WORD
                     */
                 }
                 else if(s == '1'||s == '3'||s == '5'||s == '7'||s == '9'||s == 'B'||s == 'D'||s == 'F'){//Format 4
@@ -1072,6 +1072,17 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
             else fputc(32, fp);
         }
 
+        //Base Register checker
+        if(hexToCommand(objVector[index].substr(0,2))=="LDB   "){
+            int checkNibbles = 3;
+            int checkAddress = 0;
+            if(nixbpeStr.substr(5,1)=="1") checkNibbles = 5;
+            else if(nixbpeStr.substr(4,1)=="1") checkAddress = address;
+            else if(nixbpeStr.substr(3,1)=="1") checkAddress = baseAddress;
+            cout << "LDB found at address" + address << endl;
+            
+        }
+
         //Columns 18-35
         /*
             We have to determine the address from the symtable. We know if its a direct address, immediate address, base relative or pc relative etc.
@@ -1088,9 +1099,21 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
             //THIS IS FILLER FOR NOW
             
             //this is the filler section
-            if(nixbpeStr.substr(5,1)=="0")fprintf(fp, "%s", objVector[index].substr(3,3).c_str());
-            else fprintf(fp, "%s", objVector[index].substr(3,5).c_str());
-            //end filler
+            if(nixbpeStr.substr(5,1)=="0"){
+                //fprintf(fp, "%s", objVector[index].substr(3,3).c_str());
+                if(nixbpeStr.substr(4,1)=="1"){//PC Relative
+                    
+                }
+                else if(nixbpeStr.substr(3,1)=="1"){//Base Relative
+                    
+                }//end filler
+            }
+            else {
+                Symbol *tmpSymPtr = findAddressInSymtab(symHead, "0"+objVector[index].substr(3,5));
+                if(tmpSymPtr != nullptr)fprintf(fp, "%s", tmpSymPtr->getName().c_str());
+                else fprintf(fp, "%s", objVector[index].substr(3,5).c_str());
+            }
+            
 
             if(nixbpeStr.substr(2,1)=="1") fprintf(fp, ",X");
 
