@@ -1296,6 +1296,23 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
             a. Do reserve bytes
         2. If not, write the end record.
     */
+
+    while(symHead!=nullptr){
+
+        if(symHead->getAddress == address){
+
+            int RESBlength = 0;
+
+            if(symHead->next != nullptr) RESBlength = symHead->next->getDecValue() - symHead->getDecValue();
+            else RESBlength = hexToDecimal(objVector[1].substr(12,6)) - symHead->getDecValue();
+
+            fprintf(fp, "%s   RESB    %c", symHead->getName() ,);//We can change this so it also does RESW later
+        }
+        
+        symHead = symHead->next;
+    }
+
+
     
     //1) 1st Line of SIC File
     //      a) Extract Title of program and immediatly put into file
