@@ -1206,8 +1206,10 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
             }
             else { // if extended i.e. not relative
                 Symbol *tmpSymPtr = findAddressInSymtab(symHead, "0"+objVector[index].substr(3,5)); // check in symtab
-                // ADD LITERAL VERSION
+                Literal *tmpLitPtr = findAddressInLittab(litHead, "0"+objVector[index].substr(3,5)); // check if in littab
+
                 if(tmpSymPtr != nullptr)fprintf(fp, "%s", tmpSymPtr->getName().c_str()); // if in symtab print out symbol name
+                else if(tmpLitPtr != nullptr)fprintf(fp, "%s", tmpLitPtr->getName().c_str()); // else if in littab, print litname
                 else fprintf(fp, "%s", objVector[index].substr(3,5).c_str()); // else print remaining info
             }
             
