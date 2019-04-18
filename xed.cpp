@@ -1311,7 +1311,7 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
 
     while(tmpSym!=nullptr){
 
-        if(tmpSym->getValue() == address){
+        if(tmpSym->getDecValue() == address){
 
             int RESBlength = 0;
 
