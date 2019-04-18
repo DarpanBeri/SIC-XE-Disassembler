@@ -151,6 +151,13 @@ int hexToDecimal(string num){
     return x;
 }
 
+/*************************************************************
+ FUNCTION: signedHexToDecimal()
+ DESCRIPTION: Converts signed hex to decimal
+ I/O:
+    input parameters: String
+    output: Integer
+ *************************************************************/
 int signedHexToDecimal(string num){
     string leadF = "";
 
@@ -173,7 +180,6 @@ int signedHexToDecimal(string num){
     input parameters: int num
     output: string hex
  *************************************************************/
-
 string decimalToHex(int num){
     stringstream ss;
 
@@ -672,6 +678,11 @@ string hexToCommand(string hex){
     return "ERROR";
 }
 
+/*************************************************************
+ CLASS: Symbol
+ DESCRIPTION: Internal datastructure to store symbols and its
+ properties from Symtab
+ *************************************************************/
 class Symbol{
     private:
         string name;
@@ -713,6 +724,11 @@ class Symbol{
 
 };
 
+/*************************************************************
+ CLASS: Literal
+ DESCRIPTION: Internal datastructure to store literals and its
+ properties from Littab.
+ *************************************************************/
 class Literal{
 
     private:
@@ -812,6 +828,13 @@ Literal* findAddressInLittab(Literal *litPtr, string address){
         15. go until another '0a' and test if you can read one more byte
     **/
 
+/*************************************************************
+ FUNCTION: toSymbol(Symbol *head, FILE *fp)
+ DESCRIPTION: Reads the .sym file and transfers the information onto a linked list.
+ I/O:
+    Input: Pointer to head of symbol linked list. File pointer to Littab.
+    Output: Returns pointer to the new head of the symbol linked list.
+ *************************************************************/
 Symbol* toSymbol(Symbol* head, FILE *fp){
     int c = 0;
     string tmpName = "";
@@ -874,7 +897,13 @@ Symbol* toSymbol(Symbol* head, FILE *fp){
         14. take in 6 bytes into address
         15. go until another '0a' and test if you can read one more byte
 */
-
+/*************************************************************
+ FUNCTION: toLiteral(Literal* &head, FILE *fp)
+ DESCRIPTION: Reads the .sym file and transfers the information onto a linked list.
+ I/O:
+    Input: Pointer to head of literal linked list. File pointer to Littab.
+    Output: Returns pointer to the new head of the literal linked list.
+ *************************************************************/
 Literal* toLiteral(Literal* &head, FILE *fp){
     int c = 0;
     string tmpName = "";
