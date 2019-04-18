@@ -1307,20 +1307,31 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
         2. If not, write the end record.
     */
 
-    while(symHead!=nullptr){
+    Symbol *tmpSym = symHead;
 
-        if(symHead->getAddress == address){
+    while(tmpSym!=nullptr){
+
+        if(tmpSym->getAddress == address){
 
             int RESBlength = 0;
 
-            if(symHead->next != nullptr) RESBlength = symHead->next->getDecValue() - symHead->getDecValue();
-            else RESBlength = hexToDecimal(objVector[1].substr(12,6)) - symHead->getDecValue();
+            if(tmpSym->next != nullptr) RESBlength = tmpSym->next->getDecValue() - tmpSym->getDecValue();
+            else RESBlength = hexToDecimal(objVector[1].substr(12,6)) - tmpSym->getDecValue();
 
-            fprintf(fp, "%s   RESB    %c", symHead->getName() ,);//We can change this so it also does RESW later
+            fprintf(fp, "%s   RESB    %c", tmpSym->getName().c_str() ,RESBlength);//We can change this so it also does RESW later
+            fputc(10, fp);
         }
         
-        symHead = symHead->next;
+        tmpSym = tmpSym->next;
     }
+
+    //End line
+    tmpSym = findAddressInSymtab(symHead, objVector[objVector.length()-1].substr(1,6));
+
+    if(tmpSym != nullptr) fprintf(fp, "         END   %s", tmpSym->getName());
+    else fprintf(fp, "         END   %s", objVector[objVector.length()-1].substr(1,6));
+
+    
 
 
     
