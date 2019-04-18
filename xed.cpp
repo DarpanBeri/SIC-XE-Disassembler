@@ -1320,6 +1320,7 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
 
             fprintf(fp, "%s   RESB    %c", tmpSym->getName().c_str() ,RESBlength);//We can change this so it also does RESW later
             fputc(10, fp);
+            address += RESBlength;
         }
         
         tmpSym = tmpSym->next;
