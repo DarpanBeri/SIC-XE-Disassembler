@@ -1311,7 +1311,7 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
 
     while(tmpSym!=nullptr){
 
-        if(tmpSym->getAddress() == address){
+        if(tmpSym->getValue() == address){
 
             int RESBlength = 0;
 
@@ -1329,7 +1329,7 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
     tmpSym = findAddressInSymtab(symHead, objVector[objVector.size()-1].substr(1,6));
 
     if(tmpSym != nullptr) fprintf(fp, "         END   %s", tmpSym->getName().c_str());
-    else fprintf(fp, "         END   %s", objVector[objVector.size()-1].substr(1,6));
+    else fprintf(fp, "         END   %s", objVector[objVector.size()-1].substr(1,6).c_str());
 
     
 
