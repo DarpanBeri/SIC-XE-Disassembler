@@ -1097,7 +1097,7 @@ vector<string> readObj(FILE *fp, Symbol *symHead, Literal *litHead){
     //End record check
     if(c!=69) gracefulExit("Fatal Error: no end record found.");
 
-    tmpVector.pushBack("E");//69
+    tmpVector.push_back("E");//69
     for(int i=0; i<6; i++){
         c= fgetc(fp);
         char s = static_cast<char>(c);
@@ -1311,7 +1311,7 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
 
     while(tmpSym!=nullptr){
 
-        if(tmpSym->getAddress == address){
+        if(tmpSym->getAddress() == address){
 
             int RESBlength = 0;
 
@@ -1326,10 +1326,10 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
     }
 
     //End line
-    tmpSym = findAddressInSymtab(symHead, objVector[objVector.length()-1].substr(1,6));
+    tmpSym = findAddressInSymtab(symHead, objVector[objVector.size()-1].substr(1,6));
 
     if(tmpSym != nullptr) fprintf(fp, "         END   %s", tmpSym->getName());
-    else fprintf(fp, "         END   %s", objVector[objVector.length()-1].substr(1,6));
+    else fprintf(fp, "         END   %s", objVector[objVector.size()-1].substr(1,6));
 
     
 
