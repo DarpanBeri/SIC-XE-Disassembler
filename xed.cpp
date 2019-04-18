@@ -1288,10 +1288,14 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
             }
 
         }
-
         address += objVector[index++].length()/2;
-
     }
+    /*
+    After running out of text records,(the end of the program is not reacherd(checked by the lenth)) in this case:
+        1. Check the symtab and then the littab(not really needed) to see if there is anything remaining that is greater than or equla to current address. If so:
+            a. Do reserve bytes
+        2. If not, write the end record.
+    */
     
     //1) 1st Line of SIC File
     //      a) Extract Title of program and immediatly put into file
