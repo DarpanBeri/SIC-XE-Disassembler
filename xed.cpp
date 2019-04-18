@@ -1097,6 +1097,16 @@ vector<string> readObj(FILE *fp, Symbol *symHead, Literal *litHead){
     //End record check
     if(c!=69) gracefulExit("Fatal Error: no end record found.");
 
+    tmpVector.pushBack("E");//69
+    for(int i=0; i<6; i++){
+        c= fgetc(fp);
+        char s = static_cast<char>(c);
+        tmpVar += s;
+    }
+
+    tmpVector.push_back(tmpVar);
+    tmpVar = "";
+
     return tmpVector;
 }
 
