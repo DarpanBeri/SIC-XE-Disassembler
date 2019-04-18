@@ -1141,7 +1141,7 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
                 else tmpAddress = hexToDecimal(objVector[index].substr(3,3));
                 //end filler
                 Symbol *tmpSymPtr = findAddressInSymtab(symHead, decimalToHex(tmpAddress));
-                Literal *tmpLitPtr = findAddressInLittab(litHead, decimalToHex(tmpAddress));//THIS NEEDS WORK
+                Literal *tmpLitPtr = findAddressInLittab(litHead, decimalToHex(tmpAddress-3));
                 if(tmpSymPtr != nullptr)fprintf(fp, "%s", tmpSymPtr->getName().c_str());
                 else if(tmpLitPtr != nullptr)fprintf(fp, "%s", tmpSymPtr->getName().c_str());
                 else fprintf(fp, "%s", objVector[index].substr(3,3).c_str());
