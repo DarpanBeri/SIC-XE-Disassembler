@@ -1329,9 +1329,9 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
     //End line
     tmpSym = findAddressInSymtab(symHead, objVector[objVector.size()-1].substr(1,6));
 
-    if(tmpSym != nullptr) fprintf(fp, "         END   %s", tmpSym->getName().c_str());
+    if(tmpSym != nullptr) fprintf(fp, "         END     %s", tmpSym->getName().c_str());
     else fprintf(fp, "         END   %s", objVector[objVector.size()-1].substr(1,6).c_str());
-
+    fputc(10, fp);
     
 
 
