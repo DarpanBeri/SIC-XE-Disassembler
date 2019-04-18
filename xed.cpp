@@ -21,6 +21,7 @@
 #include <cstdio>
 #include <sstream>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 /*
@@ -150,6 +151,21 @@ int hexToDecimal(string num){
     return x;
 }
 
+int signedHexToDecimal(string num){
+    string leadF = "";
+
+    if(num.substr(0,1) == "8" || num.substr(0,1) == "9" || num.substr(0,1) == "A" ||
+        num.substr(0,1) == "B" || num.substr(0,1) == "C" || num.substr(0,1) == "D" ||
+        num.substr(0,1) == "E" || num.substr(0,1) == "F")
+            for(int i = num.length(); i < 9; i++) leadF += "F";
+
+    leadF += num;
+    
+    int x = (int)strtol(leadF.c_str(), 0, 16);
+
+    return x;
+}
+
 /*************************************************************
  FUNCTION: decimalToHex()
  DESCRIPTION: Converts decimal to hex
@@ -164,6 +180,9 @@ string decimalToHex(int num){
     ss << hex << num;
     
     string s (ss.str());
+
+    transform(s.begin(), s.end(), s.begin(), ::toupper);        
+
     while(s.length() < 6) s = "0"+s;
     if(s.length() > 6) s = s.substr(s.length()-6,6);
     return s;
@@ -961,7 +980,7 @@ vector<string> readObj(FILE *fp, Symbol *symHead, Literal *litHead){
         
         while(c!=10){// First opcode instruction
             
-            if(litHead!=nullptr && litHead->getDecAddress() < address){//Literal (LTORG)
+            if(litHead!=nullptr && litHead->getDecAddress() <= address){//Literal (LTORG)
                 for(int i=0; i < litHead->getDecLength();i++){
                     char s = static_cast<char>(c);
                     tmpVar += s;
@@ -1083,14 +1102,14 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
         else fprintf(fp, "        ");
 
         //Column 9(1 based)
-        if(formatFinder(objVector[index].substr(0,2))==3 && opcodeValid(objVector[index].substr(0,2))){
+        if(formatFinder(objVector[index].substr(0,2))==3 && opcodeValid(objVector[index].substr(0,3))){
             nixbpeStr = nixbpeFinder(objVector[index].substr(0,3));
             if(nixbpeStr.substr(5,1) == "1") fprintf(fp, "+");//extended
             else fprintf(fp," ");
         }else fprintf(fp, " ");
 
         //Columns 10-16(1 based)
-        if(litPtr!=nullptr && litPtr->getDecAddress()<address){
+        if(litPtr!=nullptr && litPtr->getDecAddress()==address){
             fprintf(fp, "LTORG  ");
             fputc(10, fp);
             address += objVector[index++].length()/2;
@@ -1114,6 +1133,8 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
             if(nixbpeStr.substr(5,1)=="1") checkNibbles = 5;
             else if(nixbpeStr.substr(4,1)=="1") checkAddress = address;
             else if(nixbpeStr.substr(3,1)=="1") checkAddress = baseAddress;
+
+            if(nixbpeStr.substr(1,1)=="1") baseAddress = hexToDecimal(objVector[index].substr(3,checkNibbles));
             
         }
 
@@ -1127,7 +1148,8 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
                 * If format 2, interpret the next 2 nibbles  of the opcode and put the corresponding register to the correct spots and add in 0A.
                 * Format 1, do nothing and add 0A.
         */
-        if(formatFinder(objVector[index].substr(0,2))==3){//Format 3/4
+        if(objVector[index].substr(0,2)=="4F")fputc(10, fp);
+        else if(formatFinder(objVector[index].substr(0,2))==3){//Format 3/4
             //THIS IS FILLER FOR NOW
             //THIS IS FILLER FOR NOW
             //THIS IS FILLER FOR NOW
@@ -1136,17 +1158,17 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
             if(nixbpeStr.substr(5,1)=="0"){
                 int tmpAddress = -1;
                 //fprintf(fp, "%s", objVector[index].substr(3,3).c_str());
-                if(nixbpeStr.substr(4,1)=="1") tmpAddress = address + 3 + hexToDecimal(objVector[index].substr(3,3));
-                else if(nixbpeStr.substr(3,1)=="1") tmpAddress = baseAddress;
+                if(nixbpeStr.substr(4,1)=="1") tmpAddress = address + 3 + signedHexToDecimal(objVector[index].substr(3,3));
+                else if(nixbpeStr.substr(3,1)=="1") tmpAddress = baseAddress + hexToDecimal(objVector[index].substr(3,3));
                 else tmpAddress = hexToDecimal(objVector[index].substr(3,3));
                 //end filler
                 Symbol *tmpSymPtr = findAddressInSymtab(symHead, decimalToHex(tmpAddress));
                 Literal *tmpLitPtr = findAddressInLittab(litHead, decimalToHex(tmpAddress-3));
                 if(tmpSymPtr != nullptr)fprintf(fp, "%s", tmpSymPtr->getName().c_str());
-                else if(tmpLitPtr != nullptr)fprintf(fp, "%s", tmpSymPtr->getName().c_str());
+                else if(tmpLitPtr != nullptr)fprintf(fp, "%s", tmpLitPtr->getName().c_str());
                 else fprintf(fp, "%s", objVector[index].substr(3,3).c_str());
      
-       }
+            }
             else {
                 Symbol *tmpSymPtr = findAddressInSymtab(symHead, "0"+objVector[index].substr(3,5));
                 if(tmpSymPtr != nullptr)fprintf(fp, "%s", tmpSymPtr->getName().c_str());
@@ -1227,6 +1249,19 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
             fputc(10, fp);
         }
 
+        //Check to see if next command is base relative or PC relative
+        if(objVector[index+1] != "M" && formatFinder(objVector[index+1].substr(0,2))==3 && formatFinder(objVector[index].substr(0,2))==3){
+            if(nixbpeFinder(objVector[index+1].substr(0,3)).substr(3,1)=="1" && nixbpeStr.substr(4,1) == "1"){
+                string name = findAddressInSymtab(symHead, decimalToHex(baseAddress))->getName();
+                fprintf(fp, "         BASE    %s", name.c_str());
+                fputc(10, fp);
+            }
+            else if(nixbpeFinder(objVector[index+1].substr(0,3)).substr(4,1)=="1" && nixbpeStr.substr(3,1) == "1"){
+                fprintf(fp, "         NOBASE");
+                fputc(10, fp);
+            }
+
+        }
 
         address += objVector[index++].length()/2;
 
