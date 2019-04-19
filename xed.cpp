@@ -1374,6 +1374,20 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
     //          a) For last symtab label, find difference between program length and address
 }       
 
+/*************************************************************
+ FUNCTION: writeAddress(FILE *fp, int address)
+ DESCRIPTION: writes address for lis file
+ I/O:
+    input parameters: FILE pointer, vector<string>, Symbol pointer, Literal pointer
+    output: n/a
+ *************************************************************/
+void writeAddress(FILE *fp, int address){
+
+    string s = decimalToHex(address);
+    
+    fprintf(fp, "%s  ", s)
+}
+
 
 /*************************************************************
  FUNCTION: writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *litHead)
