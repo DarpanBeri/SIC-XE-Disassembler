@@ -1132,6 +1132,20 @@ vector<string> readObj(FILE *fp, Symbol *symHead, Literal *litHead){
     input parameters: FILE pointer, vector<string>, Symbol pointer, Literal pointer
     output: n/a
  *************************************************************/
+ string concatTrailingSpaces(string s){
+     
+     while(s.substr(s.length()-1,1) != " ")s = s.substr(0, s.length()-1);
+
+     return s;
+ }
+
+/*************************************************************
+ FUNCTION: writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *litHead)
+ DESCRIPTION: writes the sic file based on the info provided
+ I/O:
+    input parameters: FILE pointer, vector<string>, Symbol pointer, Literal pointer
+    output: n/a
+ *************************************************************/
 void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *litHead){
     //Instets 1st line of SIC program
     fprintf(fp, "%s", objVector[1].substr(0,6).c_str());
@@ -1214,17 +1228,31 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
                 Symbol *tmpSymPtr = findAddressInSymtab(symHead, decimalToHex(tmpAddress)); // check if in symtab
                 Literal *tmpLitPtr = findAddressInLittab(litHead, decimalToHex(tmpAddress-3)); // check if in littab
                 
-                if(tmpSymPtr != nullptr)fprintf(fp, "%s", tmpSymPtr->getName().c_str()); // if in symtab print out symbol name
-                else if(tmpLitPtr != nullptr)fprintf(fp, "%s", tmpLitPtr->getName().c_str()); // else if in littab, print litname
-                else fprintf(fp, "%s", objVector[index].substr(3,3).c_str()); // else print remaining info
+                if(tmpSymPtr != nullptr){
+                    string s = concatTrailingSpaces(tmpSymPtr->getName());
+                    fprintf(fp, "%s", s.c_str()); // if in symtab print out symbol name
+                }
+                else if(tmpLitPtr != nullptr){
+                    string s = concatTrailingSpaces(tmpLitPtr->getName());
+                    fprintf(fp, "%s", s.c_str()); // else if in littab, print litname
+                }
+                else {
+                    fprintf(fp, "%s", objVector[index].substr(3,3).c_str()); // else print remaining info
+                }
      
             }
             else { // if extended i.e. not relative
                 Symbol *tmpSymPtr = findAddressInSymtab(symHead, "0"+objVector[index].substr(3,5)); // check in symtab
                 Literal *tmpLitPtr = findAddressInLittab(litHead, "0"+objVector[index].substr(3,5)); // check if in littab
 
-                if(tmpSymPtr != nullptr)fprintf(fp, "%s", tmpSymPtr->getName().c_str()); // if in symtab print out symbol name
-                else if(tmpLitPtr != nullptr)fprintf(fp, "%s", tmpLitPtr->getName().c_str()); // else if in littab, print litname
+                if(tmpSymPtr != nullptr){
+                    string s = concatTrailingSpaces(tmpSymPtr->getName());
+                    fprintf(fp, "%s", s.c_str()); // if in symtab print out symbol name
+                }
+                else if(tmpLitPtr != nullptr){
+                    string s = concatTrailingSpaces(tmpLitPtr->getName());
+                    fprintf(fp, "%s", s.c_str()); // else if in littab, print litname
+                }
                 else fprintf(fp, "%s", objVector[index].substr(3,5).c_str()); // else print remaining info
             }
             
