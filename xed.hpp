@@ -225,6 +225,15 @@ Literal* toLiteral(Literal* &head, FILE *fp);
 vector<string> readObj(FILE *fp, Symbol *symHead, Literal *litHead);
 
 /*************************************************************
+ FUNCTION: concatTrailingSpaces(string s)
+ DESCRIPTION: Concatinates trailing spaces
+ I/O:
+    input parameters: String
+    output: String
+ *************************************************************/
+ string concatTrailingSpaces(string s);
+
+/*************************************************************
  FUNCTION: writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *litHead)
  DESCRIPTION: writes the sic file based on the info provided
  I/O:
