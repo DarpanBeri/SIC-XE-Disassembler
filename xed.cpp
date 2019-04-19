@@ -1520,7 +1520,6 @@ void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
                 * Format 1, do nothing and add 0A.
         */
         if(objVector[index].substr(0,2)=="4F"){
-            column += hexToCommand("4F").length();
             writeOpcode(fp, objVector[index], column);
             fputc(10, fp);
         }
