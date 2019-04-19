@@ -1412,7 +1412,7 @@ void writeAddress(FILE *fp, int address){
  *************************************************************/
 void writeOpcode(FILE *fp, string opcode, int column){
 
-    while(column < 26){
+    while(column < 29){
         fputc(32, fp);
         column++;
     }
@@ -1520,7 +1520,7 @@ void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
                 * Format 1, do nothing and add 0A.
         */
         if(objVector[index].substr(0,2)=="4F"){
-            column +=3;
+            column +=6;
             writeOpcode(fp, objVector[index], column);
             fputc(10, fp);
         }
