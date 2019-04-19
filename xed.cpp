@@ -1473,7 +1473,7 @@ void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
                 writeAddress(fp, address);
 
                 fprintf(fp, "*       %s", litPtr->getName().c_str());
-                column += 8 + litPtr->getName().length();
+                column += 7 + litPtr->getName().length();
 
                 writeOpcode(fp, objVector[index], column);
 
@@ -1520,7 +1520,6 @@ void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
                 * Format 1, do nothing and add 0A.
         */
         if(objVector[index].substr(0,2)=="4F"){
-            column +=6;
             writeOpcode(fp, objVector[index], column);
             fputc(10, fp);
         }
@@ -1570,7 +1569,7 @@ void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
 
             if(nixbpeStr.substr(2,1)=="1"){
                 fprintf(fp, ",X"); // check if indexed
-                writeOpcode(fp, objVector[index], column);
+                column+=2;
             } 
             
             writeOpcode(fp, objVector[index], column);
