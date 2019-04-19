@@ -1383,7 +1383,223 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
     output: n/a
  *************************************************************/
 void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *litHead){
-  
+    //Instets 1st line of SIC program
+    fprintf(fp, "%s", objVector[1].substr(0,6).c_str());
+    fprintf(fp, "   START   ");
+    fprintf(fp, "%s", objVector[1].substr(6,6).c_str());
+    fputc(10, fp);
+     
+    //Text records
+    int index = 3;
+    int address = hexToDecimal(objVector[1].substr(6,6));;
+    int baseAddress = 0;
+    Symbol *symPtr = symHead; // Potential optimization
+    Literal *litPtr = litHead; // Potential optimization
+    string nixbpeStr = "";
+    while(objVector[index] != "M"){
+
+        //First 8 columns(1 based)
+        if(symPtr != nullptr && symPtr->getDecValue() == address){
+            fprintf(fp, "%s  ", symPtr->getName().c_str());
+            symPtr = symPtr->next;
+        }
+        else fprintf(fp, "        ");
+
+        //Column 9(1 based)
+        if(formatFinder(objVector[index].substr(0,2))==3 && opcodeValid(objVector[index].substr(0,3))){
+            nixbpeStr = nixbpeFinder(objVector[index].substr(0,3));
+            if(nixbpeStr.substr(5,1) == "1") fprintf(fp, "+");//extended
+            else fprintf(fp," ");
+        }else fprintf(fp, " ");
+
+        //Columns 10-16(1 based)
+        if(litPtr!=nullptr && litPtr->getDecAddress()==address){
+            fprintf(fp, "LTORG  ");
+            fputc(10, fp);
+            address += objVector[index++].length()/2;
+            litPtr = litPtr->next;
+            continue;
+        }
+        fprintf(fp, "%s ", hexToCommand(objVector[index].substr(0,2)).c_str()); // General case
+
+        //Column 17
+        if(formatFinder(objVector[index].substr(0,2))==3){
+            nixbpeStr = nixbpeFinder(objVector[index].substr(0,3));
+            if(nixbpeStr.substr(0,1)=="0") fputc(35, fp);
+            else if(nixbpeStr.substr(1,1)=="0") fputc(64, fp);
+            else fputc(32, fp);
+        }
+
+        //Base Register checker
+        if(hexToCommand(objVector[index].substr(0,2))=="LDB   "){
+            int checkNibbles = 3;
+            int checkAddress = 0;
+            if(nixbpeStr.substr(5,1)=="1") checkNibbles = 5;
+            else if(nixbpeStr.substr(4,1)=="1") checkAddress = address;
+            else if(nixbpeStr.substr(3,1)=="1") checkAddress = baseAddress;
+
+            if(nixbpeStr.substr(1,1)=="1") baseAddress = checkAddress + hexToDecimal(objVector[index].substr(3,checkNibbles));
+            
+        }
+
+        //Columns 18-35
+        /*
+            We have to determine the address from the symtable. We know if its a direct address, immediate address, base relative or pc relative etc.
+            We dont know if exactly where the BASE assembler directive would be. If LDB is every given, we can very well assume that the very next instruction is going to be to base relative.
+            Take opcode and check the format.
+            Depending of the format, the structure will change:
+                * If Format 3 and 4 a lot of bs
+                * If format 2, interpret the next 2 nibbles  of the opcode and put the corresponding register to the correct spots and add in 0A.
+                * Format 1, do nothing and add 0A.
+        */
+        if(objVector[index].substr(0,2)=="4F")fputc(10, fp);
+        else if(formatFinder(objVector[index].substr(0,2))==3){ // Format 3/4
+            if(nixbpeStr.substr(5,1)=="0"){ // if not extended
+                int tmpAddress = -1; // placeholder
+                
+                if(nixbpeStr.substr(4,1)=="1") tmpAddress = address + 3 + signedHexToDecimal(objVector[index].substr(3,3)); // pc relative
+                else if(nixbpeStr.substr(3,1)=="1") tmpAddress = baseAddress + hexToDecimal(objVector[index].substr(3,3)); // base relative
+                else tmpAddress = hexToDecimal(objVector[index].substr(3,3)); // nether base nor pc realtive
+                
+                Symbol *tmpSymPtr = findAddressInSymtab(symHead, decimalToHex(tmpAddress)); // check if in symtab
+                Literal *tmpLitPtr = findAddressInLittab(litHead, decimalToHex(tmpAddress-3)); // check if in littab
+                
+                if(tmpSymPtr != nullptr)fprintf(fp, "%s", tmpSymPtr->getName().c_str()); // if in symtab print out symbol name
+                else if(tmpLitPtr != nullptr)fprintf(fp, "%s", tmpLitPtr->getName().c_str()); // else if in littab, print litname
+                else fprintf(fp, "%s", objVector[index].substr(3,3).c_str()); // else print remaining info
+     
+            }
+            else { // if extended i.e. not relative
+                Symbol *tmpSymPtr = findAddressInSymtab(symHead, "0"+objVector[index].substr(3,5)); // check in symtab
+                Literal *tmpLitPtr = findAddressInLittab(litHead, "0"+objVector[index].substr(3,5)); // check if in littab
+
+                if(tmpSymPtr != nullptr)fprintf(fp, "%s", tmpSymPtr->getName().c_str()); // if in symtab print out symbol name
+                else if(tmpLitPtr != nullptr)fprintf(fp, "%s", tmpLitPtr->getName().c_str()); // else if in littab, print litname
+                else fprintf(fp, "%s", objVector[index].substr(3,5).c_str()); // else print remaining info
+            }
+            
+
+            if(nixbpeStr.substr(2,1)=="1") fprintf(fp, ",X"); // check if indexed
+
+            fputc(10, fp);
+        }
+        else if(formatFinder(objVector[index].substr(0,2))==2){//Format 2
+            int x = hexToDecimal(objVector[index].substr(2,1));
+            switch(x){
+                case 0:
+                    fprintf(fp, "A");
+                    break;
+                case 1:
+                    fprintf(fp, "X");
+                    break;
+                case 2:
+                    fprintf(fp, "L");
+                    break;
+                case 3:
+                    fprintf(fp, "B");
+                    break;
+                case 4:
+                    fprintf(fp, "S");
+                    break;
+                case 5:
+                    fprintf(fp, "T");
+                    break;
+                case 6:
+                    fprintf(fp, "F");
+                    break;
+                case 8:
+                    fprintf(fp, "PC");
+                    break;
+                case 9:
+                    fprintf(fp, "SW");
+                    break;
+            }
+            if(objVector[index].substr(0,2)!="B0"&&objVector[index].substr(0,2)!="B4"&&objVector[index].substr(0,2)!="B8"){ // check if second argument
+                x = hexToDecimal(objVector[index].substr(3,1));
+                switch(x){
+                    case 0:
+                        fprintf(fp, ",A");
+                        break;
+                    case 1:
+                        fprintf(fp, ",X");
+                        break;
+                    case 2:
+                        fprintf(fp, ",L");
+                        break;
+                    case 3:
+                        fprintf(fp, ",B");
+                        break;
+                    case 4:
+                        fprintf(fp, ",S");
+                        break;
+                    case 5:
+                        fprintf(fp, ",T");
+                        break;
+                    case 6:
+                        fprintf(fp, ",F");
+                        break;
+                    case 8:
+                        fprintf(fp, ",PC");
+                        break;
+                    case 9:
+                        fprintf(fp, ",SW");
+                        break;
+                }
+            }
+            fputc(10, fp);
+        }
+        else if(formatFinder(objVector[index].substr(0,2))==1){//Format 1
+            fputc(10, fp);
+        }
+
+        //Check to see if next command is base relative or PC relative
+        if(objVector[index+1] != "M" && formatFinder(objVector[index+1].substr(0,2))==3 && formatFinder(objVector[index].substr(0,2))==3){ // if not M and if present and next instruction are format 3 then:
+            if(nixbpeFinder(objVector[index+1].substr(0,3)).substr(3,1)=="1" && nixbpeStr.substr(4,1) == "1"){ // check if something in symtab
+                string name = findAddressInSymtab(symHead, decimalToHex(baseAddress))->getName();
+                fprintf(fp, "         BASE    %s", name.c_str()); // prints BASE and then the thing in symtab
+                fputc(10, fp);
+            }
+            else if(nixbpeFinder(objVector[index+1].substr(0,3)).substr(4,1)=="1" && nixbpeStr.substr(3,1) == "1"){ // if current is base relative and if next one is pc relative then:
+                fprintf(fp, "         NOBASE"); // No base
+                fputc(10, fp);
+            }
+
+        }
+        address += objVector[index++].length()/2;
+    }
+    /*
+    After running out of text records,(the end of the program is not reacherd(checked by the lenth)) in this case:
+        1. Check the symtab and then the littab(not really needed) to see if there is anything remaining that is greater than or equla to current address. If so:
+            a. Do reserve bytes
+        2. If not, write the end record.
+    */
+
+    Symbol *tmpSym = symHead;
+
+    while(tmpSym!=nullptr){
+
+        if(tmpSym->getDecValue() == address){
+
+            int RESBlength = 0;
+
+            if(tmpSym->next != nullptr) RESBlength = tmpSym->next->getDecValue() - tmpSym->getDecValue();
+            else RESBlength = hexToDecimal(objVector[1].substr(12,6)) - tmpSym->getDecValue();
+            string RESBstring = to_string(RESBlength);
+
+            fprintf(fp, "%s   RESB    %s", tmpSym->getName().c_str() ,RESBstring.c_str());//We can change this so it also does RESW later
+            fputc(10, fp);
+            address += RESBlength;
+        }
+        
+        tmpSym = tmpSym->next;
+    }
+
+    //End line
+    tmpSym = findAddressInSymtab(symHead, objVector[objVector.size()-1]);
+
+    if(tmpSym != nullptr) fprintf(fp, "         END     %s", tmpSym->getName().c_str());
+    else fprintf(fp, "         END   %s", objVector[objVector.size()-1].c_str());
+    fputc(10, fp);
 
 }
 
