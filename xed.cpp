@@ -1624,7 +1624,7 @@ void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
     //End line
     tmpSym = findAddressInSymtab(symHead, objVector[objVector.size()-1]);
 
-    writeAddress(fp, address);
+    fprintf(fp, "      ");
 
     if(tmpSym != nullptr) fprintf(fp, "         END     %s", tmpSym->getName().c_str());
     else fprintf(fp, "         END   %s", objVector[objVector.size()-1].c_str());
