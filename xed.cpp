@@ -1474,6 +1474,7 @@ void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
     int address = hexToDecimal(objVector[1].substr(6,6));;
     int baseAddress = 0;
     int column = 0;
+    bool baseBool = false;
     Symbol *symPtr = symHead; // Potential optimization
     Literal *litPtr = litHead; // Potential optimization
     string nixbpeStr = "";
@@ -1695,18 +1696,20 @@ void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
 
         //Check to see if next command is base relative or PC relative
         if(objVector[index+1] != "M" && formatFinder(objVector[index+1].substr(0,2))==3 && formatFinder(objVector[index].substr(0,2))==3){ // if not M and if present and next instruction are format 3 then:
-            if(nixbpeFinder(objVector[index+1].substr(0,3)).substr(3,1)=="1" && nixbpeStr.substr(4,1) == "1"){ // check if something in symtab
+            if(nixbpeFinder(objVector[index+1].substr(0,3)).substr(3,1)=="1" && !baseBool){ // check if something in symtab
                 writeAddress(fp, address);
                 string name = findAddressInSymtab(symHead, decimalToHex(baseAddress))->getName();
                 fprintf(fp, "         BASE    %s", name.c_str()); // prints BASE and then the thing in symtab
                 fputc(10, fp);
                 column = 0;
+                baseBool = true;
             }
-            else if(nixbpeFinder(objVector[index+1].substr(0,3)).substr(4,1)=="1" && nixbpeStr.substr(3,1) == "1"){ // if current is base relative and if next one is pc relative then:
+            else if(nixbpeFinder(objVector[index+1].substr(0,3)).substr(4,1)=="1" && baseBool){ // if current is base relative and if next one is pc relative then:
                 writeAddress(fp, address);
                 fprintf(fp, "         NOBASE"); // No base
                 fputc(10, fp);
                 column = 0;
+                baseBool = false;
             }
 
         }
