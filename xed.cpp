@@ -1436,7 +1436,7 @@ void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
             while(litPtr!=nullptr && litPtr->getDecAddress()==address){
                 writeAddress(fp, address);
 
-                fprintf(fp, "*       %s", litPtr->getName());
+                fprintf(fp, "*       %s", litPtr->getName().c_str());
 
                 address += objVector[index++].length()/2;
                 litPtr = litPtr->next;
