@@ -48,7 +48,7 @@
 #### Operating Instructions:
 **Required Input**:
 
-    add stuff here
+    The input filename needs to be the filename of a .obj and a .sym file. The .obj file needs to be an object file of SIC/XE machine. The .sym file needs to be a symboltable and littable file for the SIC/XE machine,
 
 #### Significant Design Decisions:
     add stuff here
@@ -63,6 +63,7 @@
     add stuff here
 
 #### Lessons Learned:
-* add stuff here
+* An algorithm and design takes 1 month to figure out. The actual implementation requires 1 week.
+* Quality of work matters over the quantity of work done.
 
 <!-----------------------------------------[ EOF: README.md ]--------------------------------->
