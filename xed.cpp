@@ -1443,13 +1443,18 @@ int main(int argc, char* argv[]){
             
     */
 
-    FILE* sfp = createFile(sicFile);
+    FILE* sicfp = createFile(sicFile);
 
-    writeSicFile(sfp, objectVector, symHead, litHead);
+    writeSicFile(sicfp, objectVector, symHead, litHead);
 
-    closeFile(sfp);
+    closeFile(sicfp);
 
-    
+
+    FILE* lisfp = createFile(lisFile);
+
+    writeLisFile(lisfp, objectVector, symHead, litHead);
+
+    closeFile(lisfp);
 
     return 0;
 
