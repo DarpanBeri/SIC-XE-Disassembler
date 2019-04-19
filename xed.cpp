@@ -1433,8 +1433,15 @@ void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
         if(litPtr!=nullptr && litPtr->getDecAddress()==address){
             fprintf(fp, "LTORG  ");
             fputc(10, fp);
-            address += objVector[index++].length()/2;
-            litPtr = litPtr->next;
+
+            while(litPtr!=nullptr && litPtr->getDecAddress()==address){
+                printAddress(fp, address);
+
+                fprintf(fp, "*       %s", litPtr->getName());
+
+                address += objVector[index++].length()/2;
+                litPtr = litPtr->next;
+            }
             continue;
         }
         fprintf(fp, "%s ", hexToCommand(objVector[index].substr(0,2)).c_str()); // General case
