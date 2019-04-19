@@ -269,4 +269,4 @@ void writeOpcode(FILE *fp, string opcode, int column);
  *************************************************************/
 void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *litHead);
 
-/**************************[ EOF: xbd.hpp ]************************/
+/**************************[ EOF: xed.hpp ]************************/
