@@ -1385,7 +1385,7 @@ void writeAddress(FILE *fp, int address){
 
     string s = decimalToHex(address);
     
-    fprintf(fp, "%s  ", s)
+    fprintf(fp, "%s  ", s.c_str());
 }
 
 
@@ -1398,6 +1398,7 @@ void writeAddress(FILE *fp, int address){
  *************************************************************/
 void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *litHead){
     //Instets 1st line of SIC program
+    fprintf(fp, "%s  ", objVector[1].substr(8,4).c_str());
     fprintf(fp, "%s", objVector[1].substr(0,6).c_str());
     fprintf(fp, "   START   ");
     fprintf(fp, "%s", objVector[1].substr(6,6).c_str());
@@ -1411,6 +1412,8 @@ void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
     Literal *litPtr = litHead; // Potential optimization
     string nixbpeStr = "";
     while(objVector[index] != "M"){
+
+        writeAddress(fp, address);
 
         //First 8 columns(1 based)
         if(symPtr != nullptr && symPtr->getDecValue() == address){
@@ -1600,6 +1603,7 @@ void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
             else RESBlength = hexToDecimal(objVector[1].substr(12,6)) - tmpSym->getDecValue();
             string RESBstring = to_string(RESBlength);
 
+            writeAddress(fp, address);
             fprintf(fp, "%s   RESB    %s", tmpSym->getName().c_str() ,RESBstring.c_str());//We can change this so it also does RESW later
             fputc(10, fp);
             address += RESBlength;
@@ -1610,6 +1614,8 @@ void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
 
     //End line
     tmpSym = findAddressInSymtab(symHead, objVector[objVector.size()-1]);
+
+    writeAddress(fp, address);
 
     if(tmpSym != nullptr) fprintf(fp, "         END     %s", tmpSym->getName().c_str());
     else fprintf(fp, "         END   %s", objVector[objVector.size()-1].c_str());
