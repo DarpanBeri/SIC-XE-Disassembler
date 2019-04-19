@@ -1,5 +1,5 @@
 <!-----------------------------------------------------------------
- Name: Blake Meyers(cssc0430), Darpan Beri(cssc0429), Zach Selchau(cssc0418)
+ Name: Blake Meyers(cssc0430), Darpan Beri(cssc0429), Zach Selchau(cssc0418)820533188
  Project: CS530 Assignment 2
  File: README.md
  Notes: A README file describing the program and detailing its files.
@@ -19,7 +19,7 @@
 
 **xed.cpp**:
 
-    The file cointains an algorithm that opens an XE object file and its accompanying symbol file, which then disassembles the object code, and generate an XE source file, and XE listing file using the disassembled code.
+    The file cointains an algorithm that opens an SIC/XE object file and its accompanying symbol file, which then disassembles the object code, and generate an SIC/XE source file, and SIC/XE listing file using the disassembled code.
 
 **xed.hpp**:
 
@@ -33,10 +33,10 @@
 **Make Instructions:**
 
     make all:
-    	compiles the xbd file
+    	compiles the xed file
 
     make clear:
-    	deletes the xbd file
+    	deletes the xed file, the <filename>.sic file, and the <filename>.lis file
 
 **Running the Program:**
 
@@ -49,19 +49,20 @@
 
     The input filename needs to be the filename of a .obj and a .sym file.
         The .obj file needs to be an object file of SIC/XE machine.
-        The .sym file needs to be a symboltable and littable file for the SIC/XE machine,
+        The .sym file needs to be a symtab and littab file for the SIC/XE machine,
 
 #### Significant Design Decisions:
-    add stuff here
+    The data from the .sym file is stored in a linked list.
+    
 
 #### Extra features:
 **add stuff here:**
 
-    add stuff here
+    Makefile also cleans <filename>.sic and <filename>.lis in addition to the required xed.
 
 #### Known Deficiencies and Bugs:
 **Known Bugs and Deficiencies**
-    add stuff here
+    If a LDB command is encountered and it is not immediate addressing, we do not know what is in the base register and therefore cannot calculate base relative addressing.
 
 #### Lessons Learned:
 * An algorithm and design takes 1 month to figure out. The actual implementation requires 1 week.
