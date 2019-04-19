@@ -6,7 +6,7 @@ Name: Blake Meyers(cssc0430, Red id: 819557369), Darpan Beri(cssc0429, Red id: 8
 --------------------------------------------------------------------->
 
 ## CS-530, Spring 2019 Assignment 2
-### Developed by Blake Meyers(cssc0430), Darpan Beri(cssc0429), Zach Selchau(cssc0418)
+### Developed by Blake Meyers(cssc0430, Red id: 819557369), Darpan Beri(cssc0429, Red id: 820880704), Zach Selchau(cssc0418, Red id: 820533188)
 
 #### The Program:
     Opens an XE object file, and its accompanying symbol file.
