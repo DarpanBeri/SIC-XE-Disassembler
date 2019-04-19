@@ -1568,10 +1568,14 @@ void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
                 Literal *tmpLitPtr = findAddressInLittab(litHead, decimalToHex(tmpAddress-3)); // check if in littab
                 
                 if(tmpSymPtr != nullptr){
+                    string s = concatTrailingSpaces(tmpSymPtr->getName());
+                    column -= tmpSymPtr->getName().length() - s.length;
                     fprintf(fp, "%s", tmpSymPtr->getName().c_str()); // if in symtab print out symbol name
                     column += tmpSymPtr->getName().length();
                 }
                 else if(tmpLitPtr != nullptr){
+                    string s = concatTrailingSpaces(tmpLitPtr->getName());
+                    column -= tmpLitPtr->getName().length() - s.length;
                     fprintf(fp, "%s", tmpLitPtr->getName().c_str()); // else if in littab, print litname
                     column += tmpLitPtr->getName().length();
                 }
@@ -1586,10 +1590,14 @@ void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
                 Literal *tmpLitPtr = findAddressInLittab(litHead, "0"+objVector[index].substr(3,5)); // check if in littab
 
                 if(tmpSymPtr != nullptr){
+                    string s = concatTrailingSpaces(tmpSymPtr->getName());
+                    column -= tmpSymPtr->getName().length() - s.length;
                     fprintf(fp, "%s", tmpSymPtr->getName().c_str()); // if in symtab print out symbol name
                     column += tmpSymPtr->getName().length();
                 }
                 else if(tmpLitPtr != nullptr){
+                    string s = concatTrailingSpaces(tmpLitPtr->getName());
+                    column -= tmpLitPtr->getName().length() - s.length;
                     fprintf(fp, "%s", tmpLitPtr->getName().c_str()); // else if in littab, print litname
                     column += tmpLitPtr->getName().length();
                 }
