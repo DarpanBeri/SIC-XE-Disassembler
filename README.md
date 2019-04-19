@@ -1,4 +1,3 @@
-## CS 530 Assignment 2
 <!-----------------------------------------------------------------
  Name: Blake Meyers(cssc0430), Darpan Beri(cssc0429), Zach Selchau(cssc0418)
  Project: CS530 Assignment 2
@@ -48,7 +47,9 @@
 #### Operating Instructions:
 **Required Input**:
 
-    The input filename needs to be the filename of a .obj and a .sym file. The .obj file needs to be an object file of SIC/XE machine. The .sym file needs to be a symboltable and littable file for the SIC/XE machine,
+    The input filename needs to be the filename of a .obj and a .sym file.
+        The .obj file needs to be an object file of SIC/XE machine.
+        The .sym file needs to be a symboltable and littable file for the SIC/XE machine,
 
 #### Significant Design Decisions:
     add stuff here
