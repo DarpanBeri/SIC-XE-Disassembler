@@ -1,30 +1,4 @@
 ## CS 530 Assignment 2
-
-Panned development process and plans:
-
-    - We plan to use an agile style of coding.
-
-    - We plan to use a Schedule
-
-***Potential Meeting days***
-
-    Thursdays - 4pm
-
-    Fridays - after AI Club (1:30pm)
-
-    Saturday - 1pm
-
-    Sunday - 1pm
-
-***Part 1*** - 1 Day
-
-***Part 2*** - 1 Day
-
-***Part 3*** - 2.5 Weeks
-
-***Next Session*** - Finish part 1 and start on part 2
-
-
 <!-----------------------------------------------------------------
  Name: Blake Meyers(cssc0430), Darpan Beri(cssc0429), Zach Selchau(cssc0418)
  Project: CS530 Assignment 2
@@ -59,19 +33,19 @@ Panned development process and plans:
 #### Compilation Instructions:
 **Make Instructions:**
 
-    add stuff here
+    make all:
+    	compiles the xbd file
+
+    make clear:
+    	deletes the xbd file
 
 **Running the Program:**
 
-    add stuff here
+    xed <filename>
 
 **NOTE:** <> are not part of the command.
 
 #### Operating Instructions:
-**Command Line Options**:
-
-    add stuff here
-
 **Required Input**:
 
     add stuff here
