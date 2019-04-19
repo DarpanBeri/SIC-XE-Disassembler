@@ -1134,7 +1134,7 @@ vector<string> readObj(FILE *fp, Symbol *symHead, Literal *litHead){
  *************************************************************/
  string concatTrailingSpaces(string s){
      
-     while(s.substr(s.length()-1,1) != " ")s = s.substr(0, s.length()-1);
+     while(s.substr(s.length()-1,1) == " ")s = s.substr(0, s.length()-1);
 
      return s;
  }
