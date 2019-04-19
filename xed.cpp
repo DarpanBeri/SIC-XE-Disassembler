@@ -1412,7 +1412,7 @@ void writeAddress(FILE *fp, int address){
  *************************************************************/
 void writeOpcode(FILE *fp, string opcode, int column){
 
-    while(column < 29){
+    while(column < 26){
         fputc(32, fp);
         column++;
     }
@@ -1568,8 +1568,11 @@ void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
             }
             
 
-            if(nixbpeStr.substr(2,1)=="1") fprintf(fp, ",X"); // check if indexed
-            column += 3;
+            if(nixbpeStr.substr(2,1)=="1"){
+                fprintf(fp, ",X"); // check if indexed
+                writeOpcode(fp, objVector[index], column);
+            } 
+            
             writeOpcode(fp, objVector[index], column);
 
             fputc(10, fp);
