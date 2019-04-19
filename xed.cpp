@@ -228,12 +228,10 @@ string nixbpeFinder(string hex){
     int y = hexToDecimal(hex.substr(2,1));//Last digit
     string tmpStr = "";
 
-
     x %= 4;
     if(x==3)tmpStr += "11";
     if(x==2)tmpStr += "10";
     if(x==1)tmpStr += "01";
-
 
     if(y>=8){
         y-=8;
@@ -256,7 +254,6 @@ string nixbpeFinder(string hex){
     }
     else tmpStr += "0";
 
-
     return tmpStr;
 }
 
@@ -269,15 +266,13 @@ string nixbpeFinder(string hex){
  *************************************************************/
 bool opcodeValid(string hex){
     
-    string nixbpe = nixbpeFinder(hex);//Note-- only works on 3 hex digits
+    string nixbpe = nixbpeFinder(hex);
     
     if(nixbpe.substr(0,2)=="00") return false;
     if(nixbpe.substr(0,1)=="0" || nixbpe.substr(1,1)=="0")
         if(nixbpe.substr(2,1)=="1")return false;
     if(nixbpe.substr(3,1)=="1" && (nixbpe.substr(4,1)=="1" || nixbpe.substr(5,1)=="1")) return false;
     if(nixbpe.substr(4,1)=="1" && nixbpe.substr(5,1)=="1") return false;
-    
-    
     
     return true;
 }
@@ -981,7 +976,6 @@ Literal* toLiteral(Literal* &head, FILE *fp){
         tmpAddr = "";
         tmpLen = "";
 
-
         while (c==32)c = fgetc(fp); // c becomes '0A' && 15. go until another '0a' and test if you can read one more byte
 
     }
@@ -1006,7 +1000,6 @@ vector<string> readObj(FILE *fp, Symbol *symHead, Literal *litHead){
     int c = fgetc(fp);
     if(c != 72)gracefulExit("Fatal Error: no header record found in object file."); // No header record found
 
-
     tmpVector.push_back("H");
     for(int i=0; i<18; i++){ // Storing Header record in tmpVar
         c= fgetc(fp);// At first character of the name
@@ -1022,13 +1015,11 @@ vector<string> readObj(FILE *fp, Symbol *symHead, Literal *litHead){
     while(c!=10)c=fgetc(fp); // Just in case
     c = fgetc(fp);
     
-
     tmpVector.push_back("T");
     while(c == 84){ // While in Text Record
 
         for(int i=0;i<9;i++)c=fgetc(fp); // skips first 9 characters in that line.
 
-        
         while(c!=10){// First opcode instruction
             
             if(litHead!=nullptr && litHead->getDecAddress() <= address){//Literal (LTORG)
@@ -1827,7 +1818,6 @@ int main(int argc, char* argv[]){
 
     closeFile(sicfp);
 
-
     FILE* lisfp = createFile(lisFile);
 
     writeLisFile(lisfp, objectVector, symHead, litHead);
@@ -1835,8 +1825,6 @@ int main(int argc, char* argv[]){
     closeFile(lisfp);
 
     return 0;
-
-
 }
 
 /******************************[ EOF: xed.cpp ]****************************/
