@@ -23,6 +23,8 @@
 #include <vector>
 #include <algorithm>
 
+#define nullptr NULL
+
 using namespace std;
 /*
     Pseduo code as of now:
@@ -193,6 +195,19 @@ string decimalToHex(int num){
     if(s.length() > 6) s = s.substr(s.length()-6,6);
     return s;
 }
+
+/*************************************************************
+ FUNCTION: nixbpeFinder(string hex)
+ DESCRIPTION: checks three nibbles for nixbpe bits
+ I/O:
+    input parameters: three hex characters
+    output: string.
+ *************************************************************/
+ string to_string(int num){
+	stringstream ss;
+	ss << num;
+	return ss.str();
+ }
 
 /*************************************************************
  FUNCTION: nixbpeFinder(string hex)
