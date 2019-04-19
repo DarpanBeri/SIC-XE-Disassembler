@@ -1335,8 +1335,10 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
             if(tmpSym->next != nullptr) RESBlength = tmpSym->next->getDecValue() - tmpSym->getDecValue();
             else RESBlength = hexToDecimal(objVector[1].substr(12,6)) - tmpSym->getDecValue();
             string RESBstring = toString(RESBlength);
-
-            fprintf(fp, "%s   RESB    %s", tmpSym->getName().c_str() ,RESBstring.c_str());//We can change this so it also does RESW later
+            
+            if(RESBlength % 3 == 0) fprintf(fp, "%s   RESW    %s", tmpSym->getName().c_str() ,RESBstring.c_str()/3);
+            else fprintf(fp, "%s   RESB    %s", tmpSym->getName().c_str() ,RESBstring.c_str());
+            
             fputc(10, fp);
             address += RESBlength;
         }
@@ -1691,7 +1693,8 @@ void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
             string RESBstring = toString(RESBlength);
 
             writeAddress(fp, address);
-            fprintf(fp, "%s   RESB    %s", tmpSym->getName().c_str() ,RESBstring.c_str());//We can change this so it also does RESW later
+            if(RESBlength % 3 == 0) fprintf(fp, "%s   RESW    %s", tmpSym->getName().c_str() ,RESBstring.c_str()/3);
+            else fprintf(fp, "%s   RESB    %s", tmpSym->getName().c_str() ,RESBstring.c_str());
             fputc(10, fp);
             address += RESBlength;
         }
