@@ -1385,7 +1385,7 @@ void writeAddress(FILE *fp, int address){
 
     string s = decimalToHex(address);
     
-    fprintf(fp, "%s  ", s.substr(s.length()-5,4).c_str());
+    fprintf(fp, "%s  ", s.substr(s.length()-4,4).c_str());
 }
 
 
