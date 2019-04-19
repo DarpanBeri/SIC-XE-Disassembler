@@ -1331,13 +1331,15 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
         if(tmpSym->getDecValue() == address){
 
             int RESBlength = 0;
+            int RESWlength = 0;
 
             if(tmpSym->next != nullptr) RESBlength = tmpSym->next->getDecValue() - tmpSym->getDecValue();
             else RESBlength = hexToDecimal(objVector[1].substr(12,6)) - tmpSym->getDecValue();
-            if(RESBlength % 3 == 0) RESBlength /= 3;
+            if(RESBlength % 3 == 0) RESWlength = RESBlength / 3;
             string RESBstring = toString(RESBlength);
+            string RESWstring = toString(RESWlength);
             
-            if((RESBlength*3) % 3 == 0) fprintf(fp, "%s   RESW    %s", tmpSym->getName().c_str() ,RESBstring.c_str());
+            if((RESBlength) % 3 == 0) fprintf(fp, "%s   RESW    %s", tmpSym->getName().c_str() ,RESWstring.c_str());
             else fprintf(fp, "%s   RESB    %s", tmpSym->getName().c_str() ,RESBstring.c_str());
             
             fputc(10, fp);
@@ -1688,14 +1690,16 @@ void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
         if(tmpSym->getDecValue() == address){
 
             int RESBlength = 0;
+            int RESWlength = 0;
 
             if(tmpSym->next != nullptr) RESBlength = tmpSym->next->getDecValue() - tmpSym->getDecValue();
             else RESBlength = hexToDecimal(objVector[1].substr(12,6)) - tmpSym->getDecValue();
-            if(RESBlength % 3 == 0) RESBlength /= 3;
+            if(RESBlength % 3 == 0) RESWlength = RESBlength / 3;
             string RESBstring = toString(RESBlength);
+            string RESWstring = toString(RESWlength);
 
             writeAddress(fp, address);
-            if((RESBlength*3) % 3 == 0) fprintf(fp, "%s   RESW    %s", tmpSym->getName().c_str() ,RESBstring.c_str());
+            if((RESBlength) % 3 == 0) fprintf(fp, "%s   RESW    %s", tmpSym->getName().c_str() ,RESWstring.c_str());
             else fprintf(fp, "%s   RESB    %s", tmpSym->getName().c_str() ,RESBstring.c_str());
             fputc(10, fp);
             address += RESBlength;
