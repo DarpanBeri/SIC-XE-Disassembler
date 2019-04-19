@@ -1433,7 +1433,6 @@ void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
         if(litPtr!=nullptr && litPtr->getDecAddress()==address){
             fprintf(fp, "LTORG  ");
             fputc(10, fp);
-
             while(litPtr!=nullptr && litPtr->getDecAddress()==address){
                 printAddress(fp, address);
 
