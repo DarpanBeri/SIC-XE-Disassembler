@@ -203,7 +203,7 @@ string decimalToHex(int num){
     input parameters: three hex characters
     output: string.
  *************************************************************/
- string to_string(int num){
+ string toString(int num){
 	stringstream ss;
 	ss << num;
 	return ss.str();
@@ -1334,7 +1334,7 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
 
             if(tmpSym->next != nullptr) RESBlength = tmpSym->next->getDecValue() - tmpSym->getDecValue();
             else RESBlength = hexToDecimal(objVector[1].substr(12,6)) - tmpSym->getDecValue();
-            string RESBstring = to_string(RESBlength);
+            string RESBstring = toString(RESBlength);
 
             fprintf(fp, "%s   RESB    %s", tmpSym->getName().c_str() ,RESBstring.c_str());//We can change this so it also does RESW later
             fputc(10, fp);
@@ -1625,7 +1625,7 @@ void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
 
             if(tmpSym->next != nullptr) RESBlength = tmpSym->next->getDecValue() - tmpSym->getDecValue();
             else RESBlength = hexToDecimal(objVector[1].substr(12,6)) - tmpSym->getDecValue();
-            string RESBstring = to_string(RESBlength);
+            string RESBstring = toString(RESBlength);
 
             writeAddress(fp, address);
             fprintf(fp, "%s   RESB    %s", tmpSym->getName().c_str() ,RESBstring.c_str());//We can change this so it also does RESW later
