@@ -1412,7 +1412,7 @@ void writeAddress(FILE *fp, int address){
  *************************************************************/
 void writeOpcode(FILE *fp, string opcode, int column){
 
-    while(column < 20){
+    while(column < 25){
         fputc(32, fp);
         column++;
     }
