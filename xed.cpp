@@ -1376,9 +1376,9 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
 
 /*************************************************************
  FUNCTION: writeAddress(FILE *fp, int address)
- DESCRIPTION: writes address for lis file
+ DESCRIPTION: converts decimal address to hex address for the lis file
  I/O:
-    input parameters: FILE pointer, vector<string>, Symbol pointer, Literal pointer
+    input parameters: FILE pointer, int address
     output: n/a
  *************************************************************/
 void writeAddress(FILE *fp, int address){
