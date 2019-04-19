@@ -64,11 +64,6 @@ using namespace std;
 
 */
 
-/*
-    NEW LINE FEED: '0A', Used Hex editor to find that Out
-    Need to add 0A to output files too.
-*/
-
 /*************************************************************
  FUNCTION: gracefulExit()
  DESCRIPTION: Exits gracefully
