@@ -132,6 +132,13 @@ FILE* createFile(string filename){
     return fp;
 }
 
+/*************************************************************
+ FUNCTION: closeFile()
+ DESCRIPTION: Closes an already open file
+ I/O:
+    input parameters: Pointer to a  file.
+    output: Boolean
+ *************************************************************/
 bool closeFile(FILE* fp){
     return fclose(fp) == 0;
 }
@@ -179,8 +186,8 @@ int signedHexToDecimal(string num){
  FUNCTION: decimalToHex()
  DESCRIPTION: Converts decimal to hex
  I/O:
-    input parameters: int num
-    output: string hex
+    input parameters: Integer
+    output: String
  *************************************************************/
 string decimalToHex(int num){
     stringstream ss;
@@ -197,11 +204,11 @@ string decimalToHex(int num){
 }
 
 /*************************************************************
- FUNCTION: nixbpeFinder(string hex)
- DESCRIPTION: checks three nibbles for nixbpe bits
+ FUNCTION: toString(int num)
+ DESCRIPTION: Converts an integer to its string representation
  I/O:
-    input parameters: three hex characters
-    output: string.
+    input parameters: Integer
+    output: String.
  *************************************************************/
  string toString(int num){
 	stringstream ss;
@@ -213,8 +220,8 @@ string decimalToHex(int num){
  FUNCTION: nixbpeFinder(string hex)
  DESCRIPTION: checks three nibbles for nixbpe bits
  I/O:
-    input parameters: three hex characters
-    output: string.
+    input parameters: String
+    output: String
  *************************************************************/
 string nixbpeFinder(string hex){
     int x = hexToDecimal(hex.substr(0,2));//First two digits
@@ -257,8 +264,8 @@ string nixbpeFinder(string hex){
  FUNCTION: opcodeValid()
  DESCRIPTION: Checks if the given opcode is valid
  I/O:
-    input parameters: hex String
-    output: boolean
+    input parameters: String
+    output: Boolean
  *************************************************************/
 bool opcodeValid(string hex){
     
@@ -282,7 +289,7 @@ bool opcodeValid(string hex){
  opcode.
  I/O:
     input parameters: String
-    output: int.
+    output: Integer
  *************************************************************/
 int formatFinder(string hex){
     int x = hexToDecimal(hex);
@@ -486,7 +493,7 @@ int formatFinder(string hex){
 
 
 //Returns a 6 char string
-/*************************************************************
+//*************************************************************
  FUNCTION: hexToCommand()
  DESCRIPTION: Converts hex opcode to respective function
  I/O:
@@ -793,7 +800,7 @@ class Literal{
 };
 
 /*************************************************************
- FUNCTION: addressInSymtab(Symbol *symPtr, string address)
+ FUNCTION: findAddressInSymtab(Symbol *symPtr, string address)
  DESCRIPTION: Reads the object file and transfers the information onto a vector<string>
  I/O:
     input parameters: Pointer to sym linked list, checking address(6 char string)
@@ -809,7 +816,7 @@ Symbol* findAddressInSymtab(Symbol *symPtr, string address){
 }
 
 /*************************************************************
- FUNCTION: addressInLittab(Symbol *symPtr, string address)
+ FUNCTION: findAddressInLittab(Symbol *symPtr, string address)
  DESCRIPTION: Reads the object file and transfers the information onto a vector<string>
  I/O:
     input parameters: Pointer to sym linked list, checking address(6 char string)
@@ -1126,11 +1133,11 @@ vector<string> readObj(FILE *fp, Symbol *symHead, Literal *litHead){
 }
 
 /*************************************************************
- FUNCTION: writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *litHead)
- DESCRIPTION: writes the sic file based on the info provided
+ FUNCTION: concatTrailingSpaces(string s)
+ DESCRIPTION: Concatinates trailing spaces
  I/O:
-    input parameters: FILE pointer, vector<string>, Symbol pointer, Literal pointer
-    output: n/a
+    input parameters: String
+    output: String
  *************************************************************/
  string concatTrailingSpaces(string s){
      
