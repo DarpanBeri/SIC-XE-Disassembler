@@ -178,7 +178,7 @@ class Literal{
 };
 
 /*************************************************************
- FUNCTION: addressInSymtab(Symbol *symPtr, string address)
+ FUNCTION: findAddressInSymtab(Symbol *symPtr, string address)
  DESCRIPTION: Reads the object file and transfers the information onto a vector<string>
  I/O:
     input parameters: Pointer to sym linked list, checking address(6 char string)
@@ -188,7 +188,7 @@ class Literal{
 Symbol* findAddressInSymtab(Symbol *symPtr, string address);
 
 /*************************************************************
- FUNCTION: addressInLittab(Symbol *symPtr, string address)
+ FUNCTION: findAddressInLittab(Symbol *symPtr, string address)
  DESCRIPTION: Reads the object file and transfers the information onto a vector<string>
  I/O:
     input parameters: Pointer to sym linked list, checking address(6 char string)
