@@ -64,15 +64,6 @@ using namespace std;
 
 */
 
-/*  Tips from prof:
-
-    Graceful Exit:
-        exit() -> Test return value on every system call. Int error handling routine
-
-    Don't use templates in C++.
-    Use C versions of I/O commands
-*/
-
 /*
     NEW LINE FEED: '0A', Used Hex editor to find that Out
     Need to add 0A to output files too.
