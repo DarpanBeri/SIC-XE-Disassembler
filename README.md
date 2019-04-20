@@ -66,5 +66,8 @@ Name: Blake Meyers(cssc0430, Red id: 819557369), Darpan Beri(cssc0429, Red id: 8
 #### Lessons Learned:
 * An algorithm and design takes 1 month to figure out. The actual implementation requires 1 week.
 * Quality of work matters over the quantity of work done.
+* Pair programming works well with small groups.
+* Software Design Document helps to plan out the approach to deal with a problem.
+* Motivation is important for teams.
 
 <!-----------------------------------------[ EOF: README.md ]--------------------------------->

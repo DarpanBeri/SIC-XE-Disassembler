@@ -70,3 +70,4 @@
     April 18 - Completed writing to .sic, began writing to .lis. Completed formatting for .sic.
     April 19 - Completed the writing to .lis, added Makefile, updated README.md, code optimization, and refined Software Design Document.
 
+<!-----------------------------------------[ EOF: SoftwareDesignDocument.md ]--------------------------------->
