@@ -1,15 +1,48 @@
 <!-----------------------------------------------------------------
- Name: Blake Meyers(cssc0430), Darpan Beri(cssc0429), Zach Selchau(cssc0418)
+ Name: Blake Meyers(cssc0430, Red id: 819557369), Darpan Beri(cssc0429, Red id: 820880704), Zach Selchau(cssc0418, Red id: 820533188)
  Project: CS530 Assignment 2
  File: README.md
  Notes: A README file describing the program and detailing its files.
 --------------------------------------------------------------------->
 
 ## CS-530, Spring 2019 Assignment 2 Sofware Design Document
+## Blake Meyers(cssc0430, Red id: 819557369), Darpan Beri(cssc0429, Red id: 820880704), Zach Selchau(cssc0418, Red id: 820533188)
 
 ### Software Design
 
-    1. 
+    1. Object Oriented Design
+        * **Note**: We only employed OOD in internal datastructures.
+        * OOD allowed easy storage of Symbols and Literals along with their respective properties.
+    2. Functional programing and practices
+        * The program could be easily separated into chunks which worked best with functional programming. It allowed us to decrease the size of the main substantially.
+    3. Waterfall methodology
+        * Because of the program's scope and time commitment required for a prototype, we decided to use the waterfall methodology.
+    4. Pair programming
+        * To ensure Quality over quantity and to keep everyone updated we decided to use pair programming approach over diving the work between us.
+
+### Comments about working as a team
+
+    * **Pros:** 
+        - Easier to catch and correct errors.
+        - Allowed us to bounce ideas off each other.
+        - Discussing implementations.
+        - Kept each other updated.
+        - Held each other accountable.
+        - Teaching each other.
+        - Every member has complete understanding of the project.
+        - The project felt easier with friends.
+        - Power of friendship.
+    * **Cons:**
+        - Scheduling issues.
+        - Difficult for multiple to update the same file at the same time.
+        - Had to keep everyone up-to-date.
+
+### Areas of improvement:
+
+    * Could have met more regularly.
+    * Could have identified the requirements of the project more clearly at the beginning.
+    * Could have asked Prof. Leonard for more clarification early on.
+    * Could have read the textbook.
 
 ### Meeting Days
 
@@ -20,12 +53,12 @@
 
 ### Work Done Each Day
 
-    March 3 - Initialized Git repository, added Psuedo code, and created schedule.
+    March 3 - Initialized Git repository, added psuedo code, and created a schedule.
     March 8 - First line of code, added a file check and intialized graceful exit.
     March 17 - Updated README.md
     March 19 - Added HextoCommand and HextoDecimal Functions.
     March 20 - Updated HextoCommand.
-    March 23 - Implemented exit failure, implemented graceful exits,created internal Littab and Symtab, and added more Psuedo code.
+    March 23 - Implemented exit failure, implemented graceful exits,created internal Littab and Symtab, and added more psuedo code.
     April 3 - Created algorithm for reading symtab and storing data. Added Linked List capabilities to internal Symbol and Literal datastructures.
     April 4 - Added algorithm to read from the Littab and store in internal datastructure.
     April 12 - Implemented algorithm to read object file.
