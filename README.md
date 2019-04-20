@@ -9,8 +9,8 @@ Name: Blake Meyers(cssc0430, Red id: 819557369), Darpan Beri(cssc0429, Red id: 8
 ### Developed by Blake Meyers(cssc0430, Red id: 819557369), Darpan Beri(cssc0429, Red id: 820880704), Zach Selchau(cssc0418, Red id: 820533188)
 
 #### The Program:
-    Opens an XE object file, and its accompanying symbol file.
-    Then it will disassemble the object code, and generate an XE source file, and XE listing file using the disassembled code.
+    Opens an SIC/XE object file, and its accompanying symbol file.
+    Then it will disassemble the object code, and generate an SIC/XE source file, and SIC/XE listing file using the assembled code.
 
 #### Files Included:
 **README.md**:
@@ -19,7 +19,7 @@ Name: Blake Meyers(cssc0430, Red id: 819557369), Darpan Beri(cssc0429, Red id: 8
 
 **xed.cpp**:
 
-    The file cointains an algorithm that opens an SIC/XE object file and its accompanying symbol file, which then disassembles the object code, and generate an SIC/XE source file, and SIC/XE listing file using the disassembled code.
+    The file cointains an algorithm that opens an SIC/XE object file and its accompanying symbol file, which then disassembles the object code, and generate an SIC/XE source file, and SIC/XE listing file using the assembled code.
 
 **xed.hpp**:
 
@@ -47,16 +47,15 @@ Name: Blake Meyers(cssc0430, Red id: 819557369), Darpan Beri(cssc0429, Red id: 8
 #### Operating Instructions:
 **Required Input**:
 
-    The input filename needs to be the filename of a .obj and a .sym file.
+    The input filename needs to be the filename that has a .obj and a .sym file extension.
         The .obj file needs to be an object file of SIC/XE machine.
         The .sym file needs to be a symtab and littab file for the SIC/XE machine,
 
 #### Significant Design Decisions:
     The data from the .sym file is stored in a linked list.
-    
+    We store interpreted text records inside a vector while we are reading the object file.
 
 #### Extra features:
-**add stuff here:**
 
     Makefile also cleans <filename>.sic and <filename>.lis in addition to the required xed.
 
