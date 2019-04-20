@@ -8,11 +8,6 @@
  listing file using the disassembled code.
  *************************************************************/
 
- /*
-    Zach and DB added toSymbol and toLiteral and linked list datastructure to traverse through symbols and literals(different linked list respectively).
-    Note: The first symbol is the last element of the linked list and so on.
- */
-
 #include <cstdlib>
 #include <iostream>
 #include <string>
@@ -26,43 +21,6 @@
 #define nullptr NULL
 
 using namespace std;
-/*
-    Pseduo code as of now:
-        1. We check for correct input:
-            a. Check for actual argument
-            b. check for existence for .obj and .sym file
-        1.b If check fail, do graceful exit
-            - obj file not found
-            - sym file not found
-            - Both obj and sym file not found
-            - No argument given
-
-        2. Initalize .sic and .lis files. Maybe make one more intermediatory file for debugging purposes.
-            a. Create file via C++.
-
-        INTERNAL DATASTRUCTURE:
-            1.Symbols: Has a symbolName that has a value and flag associated with it
-            2.Literals: have length and address
-
-        3. Algorithm for disassembling
-            ---- NEED INTERNAL DATA STRUCTURE FOR STORING .SYM FILE----------
-            a. Read the .obj and .sym file.
-            b. Interpret the contents via code.
-            c. Write line by line? or store in intermediatory file and then write to .lis and .sic.
-
-        3.5  Writing it to files
-            d. Write the .lis file
-            e. Write the .sic file
-*/
-
-/* INPUT AND OUTPUT STRUCTURE:
-    Input                   Output
-    <filename>.obj           <filename>.sic
-    <filename>.sym           <filename>.lis
-
-    % xed <filename>
-
-*/
 
 /*************************************************************
  FUNCTION: gracefulExit()
@@ -472,9 +430,7 @@ int formatFinder(string hex){
     return 0;
 }
 
-
-//Returns a 6 char string
-//*************************************************************
+/*************************************************************
  FUNCTION: hexToCommand()
  DESCRIPTION: Converts hex opcode to respective function
  I/O:
@@ -702,7 +658,6 @@ class Symbol{
             this->value = val;
             this->decValue = hexToDecimal(val);
             this->next = nextSym;
-            //cout << this->name << ", " << this->value << ", " << this->flag << endl;
         }
 
         char getFlag(){
@@ -752,7 +707,6 @@ class Literal{
             this->decAddress = hexToDecimal(addy);
             this->decLength = hexToDecimal(len);
             this->next = nextLit;
-            //cout << this->name << ", " << this->address << ", " << this->length << endl;
         }
 
         string getAddress(){
@@ -812,25 +766,6 @@ Literal* findAddressInLittab(Literal *litPtr, string address){
     return litPtr;
 }
 
-//Reading symtab
-    /**
-        1. iterate past first two '0a'
-        2. save the next six bytes as a string 'name' for symbol
-        3. skip 2 bytes (spaces)
-        4. take next six bytes as values
-        5. skip 2 more bytes (spaces)
-        6. take next byte as a flag
-        7. check for two 'oa' bytes in a row, else jump 2
-        8. skip until found two more 'oa'
-        9. skip all whitespace
-        10. read until whitespace, save into literal name
-        11. skip whitespace until not whitespace
-        12. take bytes into length until whitespace
-        13. skip whitespace until not whitespace
-        14. take in 6 bytes into address
-        15. go until another '0a' and test if you can read one more byte
-    **/
-
 /*************************************************************
  FUNCTION: toSymbol(Symbol *head, FILE *fp)
  DESCRIPTION: Reads the .sym file and transfers the information onto a linked list.
@@ -845,61 +780,50 @@ Symbol* toSymbol(Symbol* head, FILE *fp){
     char tmpFlag;
 
     if(feof(fp))return head;
-    for(int i = 0; i<2; i++){//1. iterate past first two '0a'
+    for(int i = 0; i<2; i++){// Iterate past first two '0a'
         c = fgetc(fp);
         if(c != 10) i--;
     }
 
     while(!feof(fp)){// Started taking in Symbols
-        for(int i = 0; i<6; i++){//2. save the next six bytes as a string 'name' for symbol
+        for(int i = 0; i<6; i++){// Save the next six bytes as a string 'name' for symbol
             c =fgetc(fp);
-            if(i==0 && c == 10)return head;//7. check for two 'oa' bytes in a row, else jump 2
+            if(i==0 && c == 10)return head;// Check for two 'oa' bytes in a row, else jump 2
             char s = static_cast<char>(c);
             tmpName += s;
         }
 
-        c =fgetc(fp);//3. skip 2 bytes (spaces)
+        c =fgetc(fp);// Skip 2 bytes (spaces)
         c =fgetc(fp);
 
-        for(int i = 0; i<6; i++){//4. take next six bytes as values
+        for(int i = 0; i<6; i++){// Take next six bytes as values
             c =fgetc(fp);
             char s = static_cast<char>(c);
             tmpValue += s;
         }
 
-        c =fgetc(fp);//5. skip 2 bytes (spaces)
+        c =fgetc(fp);// Skip 2 bytes (spaces)
         c =fgetc(fp);
 
-        c = fgetc(fp);//6. take next byte as a flag
+        c = fgetc(fp);// Take next byte as a flag
         tmpFlag = static_cast<char>(c);
 
-        Symbol *tmpSym = new Symbol(tmpName, tmpValue, tmpFlag, nullptr);//6.5 create Symbol object
+        Symbol *tmpSym = new Symbol(tmpName, tmpValue, tmpFlag, nullptr);// Create Symbol object
         if(head == nullptr) head = tmpSym;
         else{
             Symbol *symPtr = head;
             while(symPtr->next !=nullptr) symPtr = symPtr->next;
             symPtr->next = tmpSym;
         }
-        //cout << tmpSym->next <<endl;
         tmpName = "";
         tmpValue = "";
 
-        c = fgetc(fp);//7. check for two 'oa' bytes in a row, else jump 2
+        c = fgetc(fp);// Check for two 'oa' bytes in a row, else jump 2
     }
 
     return head;
 }
 
-/*
-    8. skip until found two more 'oa'
-    9. skip all whitespace
-        10. read until whitespace, save into literal name
-        11. skip whitespace until not whitespace
-        12. take bytes into length until whitespace
-        13. skip whitespace until not whitespace
-        14. take in 6 bytes into address
-        15. go until another '0a' and test if you can read one more byte
-*/
 /*************************************************************
  FUNCTION: toLiteral(Literal* &head, FILE *fp)
  DESCRIPTION: Reads the .sym file and transfers the information onto a linked list.
@@ -914,43 +838,43 @@ Literal* toLiteral(Literal* &head, FILE *fp){
     string tmpLen = "";
 
     if(feof(fp))return head;
-    for(int i = 0; i<2; i++){// 8. skip until found two more '0a'
+    for(int i = 0; i<2; i++){// Skip until found two more '0a'
          c = fgetc(fp);
         if(c != 10) i--;
     }
 
-    while(!feof(fp)){ // either EOF or whitespace
+    while(!feof(fp)){ // Either EOF or whitespace
         c = fgetc(fp);
 
         if(c == -1)return head;
 
         while(c == 32)c = fgetc(fp);
 
-        while(c != 32){ // 12. take bytes into name until whitespace
+        while(c != 32){ // Take bytes into name until whitespace
             char s = static_cast<char>(c);
             tmpName += s;
             c = fgetc(fp);
         }
 
-        while(c == 32)c = fgetc(fp); // 13. skip whitespace until not whitespace
+        while(c == 32)c = fgetc(fp); // Skip whitespace until not whitespace
 
         // save to temp length
-        while(c != 32){ // 12. take bytes into length until whitespace
+        while(c != 32){ // Take bytes into length until whitespace
             char s = static_cast<char>(c);
             tmpLen += s;
             c = fgetc(fp);
         }
 
-        while(c == 32)c = fgetc(fp); // 13. skip whitespace until not whitespace
+        while(c == 32)c = fgetc(fp); // Skip whitespace until not whitespace
 
-        for(int i = 0; i<6; i++){// 14. take in 6 bytes into address
+        for(int i = 0; i<6; i++){// Take in 6 bytes into address
             char s = static_cast<char>(c);
             tmpAddr += s;
             c =fgetc(fp);
         }
 
         // Save to literal
-        Literal *tmpLit = new Literal(tmpName, tmpAddr, tmpLen, nullptr);//6.5 create Literal object
+        Literal *tmpLit = new Literal(tmpName, tmpAddr, tmpLen, nullptr);// Create Literal object
         if(head == nullptr) head = tmpLit;
         else{
             Literal *litPtr = head;
@@ -993,7 +917,7 @@ vector<string> readObj(FILE *fp, Symbol *symHead, Literal *litHead){
         tmpVar += s;
     }
 
-    address = hexToDecimal(tmpVar.substr(6,6));//Initialize address to the start of program
+    address = hexToDecimal(tmpVar.substr(6,6));// Initialize address to the start of program
 
     tmpVector.push_back(tmpVar); // Header in 0th spot
     tmpVar = "";
@@ -1004,11 +928,11 @@ vector<string> readObj(FILE *fp, Symbol *symHead, Literal *litHead){
     tmpVector.push_back("T");
     while(c == 84){ // While in Text Record
 
-        for(int i=0;i<9;i++)c=fgetc(fp); // skips first 9 characters in that line.
+        for(int i=0;i<9;i++)c=fgetc(fp); // Skips first 9 characters in that line.
 
         while(c!=10){// First opcode instruction
             
-            if(litHead!=nullptr && litHead->getDecAddress() <= address){//Literal (LTORG)
+            if(litHead!=nullptr && litHead->getDecAddress() <= address){// Literal (LTORG)
                 for(int i=0; i < litHead->getDecLength();i++){
                     char s = static_cast<char>(c);
                     tmpVar += s;
@@ -1031,34 +955,29 @@ vector<string> readObj(FILE *fp, Symbol *symHead, Literal *litHead){
             tmpFormat = formatFinder(tmpVar);
         
         
-            if(tmpFormat == 3){//Format 3/4
+            if(tmpFormat == 3){// Format 3/4
                 int j = 3;
 
-                char s = static_cast<char>(c);//Check next nibble
+                char s = static_cast<char>(c);// Check next nibble
                 tmpVar += s;
                 c=fgetc(fp);
 
-                if(!opcodeValid(tmpVar)){//Check for invalid nixbpe
-                    /*
-                        if invalid then this has to be a WORD
-                    */
-                }
-                else if(s == '1'||s == '3'||s == '5'||s == '7'||s == '9'||s == 'B'||s == 'D'||s == 'F'){//Format 4
+                if(s == '1'||s == '3'||s == '5'||s == '7'||s == '9'||s == 'B'||s == 'D'||s == 'F'){//Format 4
                     j=5;
                     address+=1;
                 }
             
-                for(int i=0; i<j; i++){//Store given number of nibbles
+                for(int i=0; i<j; i++){// Store given number of nibbles
                     s= static_cast<char>(c);
                     tmpVar += s;
                     c=fgetc(fp);
                 }
-                tmpVector.push_back(tmpVar);//Storing in opcode
+                tmpVector.push_back(tmpVar);// Storing in opcode
                 tmpVar = "";
                 address+=3;
             }
-            else if(tmpFormat == 2){//Format 2
-                char s = static_cast<char>(c);//Need one more byte
+            else if(tmpFormat == 2){// Format 2
+                char s = static_cast<char>(c);// Need one more byte
                 tmpVar += s;
                 c=fgetc(fp);
 
@@ -1066,12 +985,12 @@ vector<string> readObj(FILE *fp, Symbol *symHead, Literal *litHead){
                 tmpVar += s;
                 c=fgetc(fp);
 
-                tmpVector.push_back(tmpVar);//Storing in opcode
+                tmpVector.push_back(tmpVar);// Storing in opcode
                 tmpVar = "";
                 address+=2;
             }
-            else if(tmpFormat == 1){//Format 1
-                tmpVector.push_back(tmpVar);//Storing in opcode
+            else if(tmpFormat == 1){// Format 1
+                tmpVector.push_back(tmpVar);// Storing in opcode
                 tmpVar = "";
                 address+=1;
             }
@@ -1081,7 +1000,7 @@ vector<string> readObj(FILE *fp, Symbol *symHead, Literal *litHead){
 
 
     tmpVector.push_back("M");
-    while(c==77){//Modification record
+    while(c==77){// Modification record
         c= fgetc(fp);
         while(c!=10){
             char s = static_cast<char>(c);
@@ -1191,61 +1110,52 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
         }
 
         //Columns 18-35
-        /*
-            We have to determine the address from the symtable. We know if its a direct address, immediate address, base relative or pc relative etc.
-            We dont know if exactly where the BASE assembler directive would be. If LDB is every given, we can very well assume that the very next instruction is going to be to base relative.
-            Take opcode and check the format.
-            Depending of the format, the structure will change:
-                * If Format 3 and 4 a lot of bs
-                * If format 2, interpret the next 2 nibbles  of the opcode and put the corresponding register to the correct spots and add in 0A.
-                * Format 1, do nothing and add 0A.
-        */
         if(objVector[index].substr(0,2)=="4F")fputc(10, fp);
         else if(formatFinder(objVector[index].substr(0,2))==3){ // Format 3/4
-            if(nixbpeStr.substr(5,1)=="0"){ // if not extended
-                int tmpAddress = -1; // placeholder
+            if(nixbpeStr.substr(5,1)=="0"){ // If not extended
+                int tmpAddress = -1; // Placeholder
                 
-                if(nixbpeStr.substr(4,1)=="1") tmpAddress = address + 3 + signedHexToDecimal(objVector[index].substr(3,3)); // pc relative
-                else if(nixbpeStr.substr(3,1)=="1") tmpAddress = baseAddress + hexToDecimal(objVector[index].substr(3,3)); // base relative
-                else tmpAddress = hexToDecimal(objVector[index].substr(3,3)); // nether base nor pc realtive
+                if(nixbpeStr.substr(4,1)=="1") tmpAddress = address + 3 + signedHexToDecimal(objVector[index].substr(3,3)); // PC relative
+                else if(nixbpeStr.substr(3,1)=="1") tmpAddress = baseAddress + hexToDecimal(objVector[index].substr(3,3)); // BASE relative
+                else tmpAddress = hexToDecimal(objVector[index].substr(3,3)); // Neither BASE nor PC realtive
                 
-                Symbol *tmpSymPtr = findAddressInSymtab(symHead, decimalToHex(tmpAddress)); // check if in symtab
-                Literal *tmpLitPtr = findAddressInLittab(litHead, decimalToHex(tmpAddress-3)); // check if in littab
+                Symbol *tmpSymPtr = findAddressInSymtab(symHead, decimalToHex(tmpAddress)); // Check if in symtab
+                Literal *tmpLitPtr = findAddressInLittab(litHead, decimalToHex(tmpAddress-3)); // Check if in littab
                 
                 if(tmpSymPtr != nullptr){
                     string s = concatTrailingSpaces(tmpSymPtr->getName());
-                    fprintf(fp, "%s", s.c_str()); // if in symtab print out symbol name
+                    fprintf(fp, "%s", s.c_str()); // If in symtab print out symbol name
                 }
                 else if(tmpLitPtr != nullptr){
                     string s = concatTrailingSpaces(tmpLitPtr->getName());
-                    fprintf(fp, "%s", s.c_str()); // else if in littab, print litname
+                    fprintf(fp, "%s", s.c_str()); // Else if in littab, print litname
                 }
                 else {
-                    fprintf(fp, "%s", objVector[index].substr(3,3).c_str()); // else print remaining info
+                    fprintf(fp, "%s", objVector[index].substr(3,3).c_str()); // Else print remaining info
                 }
      
             }
-            else { // if extended i.e. not relative
-                Symbol *tmpSymPtr = findAddressInSymtab(symHead, "0"+objVector[index].substr(3,5)); // check in symtab
-                Literal *tmpLitPtr = findAddressInLittab(litHead, "0"+objVector[index].substr(3,5)); // check if in littab
+            else { // If extended i.e. not relative
+                Symbol *tmpSymPtr = findAddressInSymtab(symHead, "0"+objVector[index].substr(3,5)); // Check in symtab
+                Literal *tmpLitPtr = findAddressInLittab(litHead, "0"+objVector[index].substr(3,5)); // Check if in littab
 
                 if(tmpSymPtr != nullptr){
                     string s = concatTrailingSpaces(tmpSymPtr->getName());
-                    fprintf(fp, "%s", s.c_str()); // if in symtab print out symbol name
+                    fprintf(fp, "%s", s.c_str()); // If in symtab print out symbol name
                 }
                 else if(tmpLitPtr != nullptr){
                     string s = concatTrailingSpaces(tmpLitPtr->getName());
-                    fprintf(fp, "%s", s.c_str()); // else if in littab, print litname
+                    fprintf(fp, "%s", s.c_str()); // Else if in littab, print litname
                 }
-                else fprintf(fp, "%s", objVector[index].substr(3,5).c_str()); // else print remaining info
+                else fprintf(fp, "%s", objVector[index].substr(3,5).c_str()); // Else print remaining info
             }
             
 
-            if(nixbpeStr.substr(2,1)=="1") fprintf(fp, ",X"); // check if indexed
+            if(nixbpeStr.substr(2,1)=="1") fprintf(fp, ",X"); // Check if indexed
 
             fputc(10, fp);
         }
-        else if(formatFinder(objVector[index].substr(0,2))==2){//Format 2
+        else if(formatFinder(objVector[index].substr(0,2))==2){// Format 2
             int x = hexToDecimal(objVector[index].substr(2,1));
             switch(x){
                 case 0:
@@ -1276,7 +1186,7 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
                     fprintf(fp, "SW");
                     break;
             }
-            if(objVector[index].substr(0,2)!="B0"&&objVector[index].substr(0,2)!="B4"&&objVector[index].substr(0,2)!="B8"){ // check if second argument
+            if(objVector[index].substr(0,2)!="B0"&&objVector[index].substr(0,2)!="B4"&&objVector[index].substr(0,2)!="B8"){ // Check if second argument
                 x = hexToDecimal(objVector[index].substr(3,1));
                 switch(x){
                     case 0:
@@ -1310,18 +1220,18 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
             }
             fputc(10, fp);
         }
-        else if(formatFinder(objVector[index].substr(0,2))==1){//Format 1
+        else if(formatFinder(objVector[index].substr(0,2))==1){// Format 1
             fputc(10, fp);
         }
 
-        //Check to see if next command is base relative or PC relative
+        // Check to see if next command is BASE relative or PC relative
         if(objVector[index+1] != "M" && formatFinder(objVector[index+1].substr(0,2))==3 && formatFinder(objVector[index].substr(0,2))==3){ // if not M and if present and next instruction are format 3 then:
-            if(nixbpeFinder(objVector[index+1].substr(0,3)).substr(3,1)=="1" && nixbpeStr.substr(4,1) == "1"){ // check if something in symtab
+            if(nixbpeFinder(objVector[index+1].substr(0,3)).substr(3,1)=="1" && nixbpeStr.substr(4,1) == "1"){ // Check if something in symtab
                 string name = findAddressInSymtab(symHead, decimalToHex(baseAddress))->getName();
-                fprintf(fp, "         BASE    %s", name.c_str()); // prints BASE and then the thing in symtab
+                fprintf(fp, "         BASE    %s", name.c_str()); // Prints BASE and then the thing in symtab
                 fputc(10, fp);
             }
-            else if(nixbpeFinder(objVector[index+1].substr(0,3)).substr(4,1)=="1" && nixbpeStr.substr(3,1) == "1"){ // if current is base relative and if next one is pc relative then:
+            else if(nixbpeFinder(objVector[index+1].substr(0,3)).substr(4,1)=="1" && nixbpeStr.substr(3,1) == "1"){ // If current is base relative and if next one is pc relative then:
                 fprintf(fp, "         NOBASE"); // No base
                 fputc(10, fp);
             }
@@ -1329,12 +1239,6 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
         }
         address += objVector[index++].length()/2;
     }
-    /*
-    After running out of text records,(the end of the program is not reacherd(checked by the lenth)) in this case:
-        1. Check the symtab and then the littab(not really needed) to see if there is anything remaining that is greater than or equla to current address. If so:
-            a. Do reserve bytes
-        2. If not, write the end record.
-    */
 
     Symbol *tmpSym = symHead;
 
@@ -1367,43 +1271,7 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
     if(tmpSym != nullptr) fprintf(fp, "         END     %s", tmpSym->getName().c_str());
     else fprintf(fp, "         END   %s", objVector[objVector.size()-1].c_str());
     fputc(10, fp);
-    
 
-
-    
-    //1) 1st Line of SIC File
-    //      a) Extract Title of program and immediatly put into file
-    //      b) Take first 6 characters to put directly into the program
-    //      c) Put in three spaces (32 dec) 
-    //      d) Put in START (83 84 65 82 84 dec)
-    //      e) Put in three spaces (32 dec) 
-    //      e) Put in starting address found in next six characters and insert 0A
-    //      f) Go next line in objvector
-    // 2) While Loop for machine instructions:
-    //      i)  save current address in temp var
-    //      ii) Pass address into a check for symtab and lit-tab coorespondance
-    //      iii)If there is in the symtab, then copy the name into the leftmost column (6 characters) and two space characters (32)
-    //      iv) If there is no symtab cooresponadance, put 8 spaces (32)
-    //      v)  Check to see if obj code is extended
-    //          a) do by passing first 3 characters into nixbpeFinder() function if its format 3 or 
-    //                 b) if it isn't format 3 or 4, put in a space
-    //      vi) Write in corresponding opcode from obj vector (6 characters) and space character
-    //      vii) Check to see if indirect or immediate
-    //              a) if indirect: add @
-    //              b) if immediate: add #
-    //              c) if both ticked: add space
-    //              d) If a literal address corresponds to current address, we copy the literal into this bit and we can skip step 8
-    //      viii) Put in the operand
-    //          a) Check to see if the operand cooresponds to anything in symtab or littab
-    //          b) Check to see if indexed
-    //              i) if it is, add ",X" to end of it
-    //          c) Add 0A
-    //3) While Loop for reservations:
-    //      i) Iterate accross symtab
-    //          a) Get difference between value stored and next value stored 
-    //              i) Reserve that many Bytes
-    //                  a) Place Symbol label in first 6 columns, followed by two spaces, and RESB and difference
-    //          a) For last symtab label, find difference between program length and address
 }       
 
 /*************************************************************
@@ -1446,14 +1314,14 @@ void writeOpcode(FILE *fp, string opcode, int column){
     output: n/a
  *************************************************************/
 void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *litHead){
-    //Instets 1st line of SIC program
+    // Insterts 1st line of SIC program
     fprintf(fp, "%s  ", objVector[1].substr(8,4).c_str());
     fprintf(fp, "%s", objVector[1].substr(0,6).c_str());
     fprintf(fp, "   START   ");
     fprintf(fp, "%s", objVector[1].substr(6,6).c_str());
     fputc(10, fp);
      
-    //Text records
+    // Text records
     int index = 3;
     int address = hexToDecimal(objVector[1].substr(6,6));;
     int baseAddress = 0;
@@ -1515,7 +1383,7 @@ void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
             column++;
         }
 
-        //Base Register checker
+        // Base Register checker
         if(hexToCommand(objVector[index].substr(0,2))=="LDB   "){
             int checkNibbles = 3;
             int checkAddress = 0;
@@ -1528,26 +1396,17 @@ void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
         }
 
         //Columns 18-35
-        /*
-            We have to determine the address from the symtable. We know if its a direct address, immediate address, base relative or pc relative etc.
-            We dont know if exactly where the BASE assembler directive would be. If LDB is every given, we can very well assume that the very next instruction is going to be to base relative.
-            Take opcode and check the format.
-            Depending of the format, the structure will change:
-                * If Format 3 and 4 a lot of bs
-                * If format 2, interpret the next 2 nibbles  of the opcode and put the corresponding register to the correct spots and add in 0A.
-                * Format 1, do nothing and add 0A.
-        */
         if(objVector[index].substr(0,2)=="4F"){
             writeOpcode(fp, objVector[index], column);
             fputc(10, fp);
         }
         else if(formatFinder(objVector[index].substr(0,2))==3){ // Format 3/4
-            if(nixbpeStr.substr(5,1)=="0"){ // if not extended
-                int tmpAddress = -1; // placeholder
+            if(nixbpeStr.substr(5,1)=="0"){ // If not extended
+                int tmpAddress = -1; // Placeholder
                 
                 if(nixbpeStr.substr(4,1)=="1") tmpAddress = address + 3 + signedHexToDecimal(objVector[index].substr(3,3)); // pc relative
                 else if(nixbpeStr.substr(3,1)=="1") tmpAddress = baseAddress + hexToDecimal(objVector[index].substr(3,3)); // base relative
-                else tmpAddress = hexToDecimal(objVector[index].substr(3,3)); // nether base nor pc realtive
+                else tmpAddress = hexToDecimal(objVector[index].substr(3,3)); // neither base nor pc realtive
                 
                 Symbol *tmpSymPtr = findAddressInSymtab(symHead, decimalToHex(tmpAddress)); // check if in symtab
                 Literal *tmpLitPtr = findAddressInLittab(litHead, decimalToHex(tmpAddress-3)); // check if in littab
@@ -1699,12 +1558,6 @@ void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
         }
         address += objVector[index++].length()/2;
     }
-    /*
-    After running out of text records,(the end of the program is not reacherd(checked by the lenth)) in this case:
-        1. Check the symtab and then the littab(not really needed) to see if there is anything remaining that is greater than or equla to current address. If so:
-            a. Do reserve bytes
-        2. If not, write the end record.
-    */
 
     Symbol *tmpSym = symHead;
 
@@ -1759,44 +1612,15 @@ int main(int argc, char* argv[]){
     Literal *litHead = nullptr;
     FILE *fp = fopen(symFile.c_str(), "r");
     symHead = toSymbol(symHead, fp);//pass to toSymbol
-                            //check if next byte exists w/ while(!feof(fp)){}
+    
     litHead = toLiteral(litHead, fp);
 
     closeFile(fp);
-    /*
-    cout << symHead->getValue() << endl;
-    cout << symHead->next->getValue() << endl;
-    cout << litHead->getAddress() << endl;
-    */
+
     // READING OBJ FILE BELOW
     FILE *fpObj = fopen(objFile.c_str(), "r");
     vector<string> objectVector = readObj(fpObj, symHead, litHead);
     closeFile(fpObj);
-
-    /* READING FROM OBJ FILE
-
-        Datastructure to store the info below:
-            1. Vector for each line.
-
-        1. Check if 1st character is H. Else GTFO.
-            a. Take in next 6 characters as name of the program. In the first line.
-            b. Take in next 6 characters. That is the first address for .lis instruction.
-            c. Take in the next 6 characters. That is the lenght of the program.
-            d. The next character is 0A(hex), i.e. move to next line.
-        2. Check if the 1st character is T. Else go to 3.
-            a. 1st 6 characters are the starting address in that record.
-            b. Next 2 characters are the lenght of the text record
-            c. From the next record to 0A, thats all opcode.(Look in modification record to spot Extended bits)
-            d. Go to 2.
-        3. Check if the 1st character is M. Else go to 4.
-            a. First 6 characters are address of instruction to be modified.
-            b. Next 2 characters are the numbers of characters in the machine instruction's opcode that must be modified.
-            c. Store next characters till 0A. These characters are the (+-label) whose address we have to add(or sub) to the address of the instruction
-            d. Go to 3.
-        4. Check if the 1st character is E. Else ERROR, NO END RECORD.
-            a. Do nothing
-            
-    */
 
     FILE* sicfp = createFile(sicFile);
 
