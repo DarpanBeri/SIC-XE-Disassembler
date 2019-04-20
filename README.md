@@ -69,5 +69,5 @@ Name: Blake Meyers(cssc0430, Red id: 819557369), Darpan Beri(cssc0429, Red id: 8
 * Pair programming works well with small groups.
 * Software Design Document helps to plan out the approach to deal with a problem.
 * Motivation is important for teams.
-
+* Check for compatability with target system.
 <!-----------------------------------------[ EOF: README.md ]--------------------------------->
