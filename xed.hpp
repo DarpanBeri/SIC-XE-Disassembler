@@ -143,13 +143,34 @@ class Symbol{
         int decValue;
 
     public:
-        Symbol *next;
-        Symbol(string nam, string val, char flg, Symbol *nextSym);
-        char getFlag();
-        string getValue();
-        int getDecValue();
-        void setNext(Symbol *nextSym);
-        string getName();
+    	Symbol *next;
+        Symbol(string nam, string val, char flg, Symbol *nextSym){
+            this->name = nam;
+            this->flag = flg;
+            this->value = val;
+            this->decValue = hexToDecimal(val);
+            this->next = nextSym;
+        }
+
+        char getFlag(){
+            return this->flag;
+        }
+
+        string getValue(){
+            return this->value;
+        }
+
+        int getDecValue(){
+            return this->decValue;
+        }
+
+        void setNext(Symbol *nextSym){
+            this->next = nextSym;
+        }
+        
+        string getName(){
+            return this->name;
+        }
 };
 
 
@@ -168,13 +189,38 @@ class Literal{
 
     public:
         Literal *next;
-        Literal(string nam, string addy, string len, Literal *nextLit);
-        string getAddress();
-        string getLength();
-        int getDecAddress();
-        int getDecLength();
-        void setNext(Literal *nextLit);
-        string getName();
+        Literal(string nam, string addy, string len, Literal *nextLit){
+            this->name = nam;
+            this->address = addy;
+            this->length = len;
+            this->decAddress = hexToDecimal(addy);
+            this->decLength = hexToDecimal(len);
+            this->next = nextLit;
+        }
+
+        string getAddress(){
+            return this->address;
+        }
+
+        string getLength(){
+            return this->length;
+        }
+
+        int getDecAddress(){
+            return this-> decAddress;
+        }
+
+        int getDecLength(){
+            return this-> decLength;
+        }
+
+        void setNext(Literal *nextLit){
+            this->next = nextLit;
+        }
+
+        string getName(){
+            return this->name;
+        }
 };
 
 /*************************************************************
