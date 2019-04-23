@@ -8,15 +8,7 @@
  listing file using the disassembled code.
  *************************************************************/
 
-#include <cstdlib>
-#include <iostream>
-#include <string>
-#include <exception>
-#include <cstring>
-#include <cstdio>
-#include <sstream>
-#include <vector>
-#include <algorithm>
+#include "xed.hpp"
 
 #define nullptr NULL
 
