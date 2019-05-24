@@ -1,6 +1,6 @@
 /*************************************************************
- Name: Blake Meyers(cssc0430, Red id: 819557369), Darpan Beri(cssc0429, Red id: 820880704), Zach Selchau(cssc0418, Red id: 820533188)
- Project: CS530 Assignment 2
+ Name: Blake Meyers, Darpan Beri, Zach Selchau
+ Project: SIC-XE-Disassembler
  File: xed.cpp
  Notes: The file cointains an algorithm that opens an XE object
  file and its accompanying symbol file, which then disassembles
@@ -112,7 +112,7 @@ int signedHexToDecimal(string num){
             for(int i = num.length(); i < 9; i++) leadF += "F";
 
     leadF += num;
-    
+
     int x = (int)strtol(leadF.c_str(), 0, 16);
 
     return x;
@@ -129,10 +129,10 @@ string decimalToHex(int num){
     stringstream ss;
 
     ss << hex << num;
-    
+
     string s (ss.str());
 
-    transform(s.begin(), s.end(), s.begin(), ::toupper);        
+    transform(s.begin(), s.end(), s.begin(), ::toupper);
 
     while(s.length() < 6) s = "0"+s;
     if(s.length() > 6) s = s.substr(s.length()-6,6);
@@ -201,22 +201,22 @@ string nixbpeFinder(string hex){
     output: Boolean
  *************************************************************/
 bool opcodeValid(string hex){
-    
+
     string nixbpe = nixbpeFinder(hex);
-    
+
     if(nixbpe.substr(0,2)=="00") return false;
     if(nixbpe.substr(0,1)=="0" || nixbpe.substr(1,1)=="0")
         if(nixbpe.substr(2,1)=="1")return false;
     if(nixbpe.substr(3,1)=="1" && (nixbpe.substr(4,1)=="1" || nixbpe.substr(5,1)=="1")) return false;
     if(nixbpe.substr(4,1)=="1" && nixbpe.substr(5,1)=="1") return false;
-    
+
     return true;
 }
 
 
 /*************************************************************
  FUNCTION: formatFinder()
- DESCRIPTION: Finds format of an instruction based off its 
+ DESCRIPTION: Finds format of an instruction based off its
  opcode.
  I/O:
     input parameters: String
@@ -796,7 +796,7 @@ Literal* toLiteral(Literal* &head, FILE *fp){
     output: Vector<string>
  *************************************************************/
 vector<string> readObj(FILE *fp, Symbol *symHead, Literal *litHead){
-    
+
     vector<string> tmpVector;
     string tmpVar = "";
     int tmpFormat = 0;
@@ -819,28 +819,28 @@ vector<string> readObj(FILE *fp, Symbol *symHead, Literal *litHead){
 
     while(c!=10)c=fgetc(fp); // Just in case
     c = fgetc(fp);
-    
+
     tmpVector.push_back("T");
     while(c == 84){ // While in Text Record
 
         for(int i=0;i<9;i++)c=fgetc(fp); // Skips first 9 characters in that line.
 
         while(c!=10){// First opcode instruction
-            
+
             if(litHead!=nullptr && litHead->getDecAddress() <= address){// Literal (LTORG)
                 for(int i=0; i < litHead->getDecLength();i++){
                     char s = static_cast<char>(c);
                     tmpVar += s;
                     c=fgetc(fp);
                 }
-            
+
                 tmpVector.push_back(tmpVar);
                 tmpVar="";
                 address += litHead->getDecLength()/2;
                 litHead = litHead->next;
                 continue;
             }
-            
+
             for(int i=0;i<2;i++){ // First 2 characters of first opcode in tmpVar to check format
                 char s = static_cast<char>(c);
                 tmpVar += s;
@@ -848,8 +848,8 @@ vector<string> readObj(FILE *fp, Symbol *symHead, Literal *litHead){
             }
 
             tmpFormat = formatFinder(tmpVar);
-        
-        
+
+
             if(tmpFormat == 3){// Format 3/4
                 int j = 3;
 
@@ -861,7 +861,7 @@ vector<string> readObj(FILE *fp, Symbol *symHead, Literal *litHead){
                     j=5;
                     address+=1;
                 }
-            
+
                 for(int i=0; i<j; i++){// Store given number of nibbles
                     s= static_cast<char>(c);
                     tmpVar += s;
@@ -931,7 +931,7 @@ vector<string> readObj(FILE *fp, Symbol *symHead, Literal *litHead){
     output: String
  *************************************************************/
  string concatTrailingSpaces(string s){
-     
+
      while(s.substr(s.length()-1,1) == " ")s = s.substr(0, s.length()-1);
 
      return s;
@@ -950,7 +950,7 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
     fprintf(fp, "   START   ");
     fprintf(fp, "%s", objVector[1].substr(6,6).c_str());
     fputc(10, fp);
-     
+
     //Text records
     int index = 3;
     int address = hexToDecimal(objVector[1].substr(6,6));;
@@ -1001,7 +1001,7 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
             else if(nixbpeStr.substr(3,1)=="1") checkAddress = baseAddress;
 
             if(nixbpeStr.substr(1,1)=="1") baseAddress = checkAddress + hexToDecimal(objVector[index].substr(3,checkNibbles));
-            
+
         }
 
         //Columns 18-35
@@ -1009,14 +1009,14 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
         else if(formatFinder(objVector[index].substr(0,2))==3){ // Format 3/4
             if(nixbpeStr.substr(5,1)=="0"){ // If not extended
                 int tmpAddress = -1; // Placeholder
-                
+
                 if(nixbpeStr.substr(4,1)=="1") tmpAddress = address + 3 + signedHexToDecimal(objVector[index].substr(3,3)); // PC relative
                 else if(nixbpeStr.substr(3,1)=="1") tmpAddress = baseAddress + hexToDecimal(objVector[index].substr(3,3)); // BASE relative
                 else tmpAddress = hexToDecimal(objVector[index].substr(3,3)); // Neither BASE nor PC realtive
-                
+
                 Symbol *tmpSymPtr = findAddressInSymtab(symHead, decimalToHex(tmpAddress)); // Check if in symtab
                 Literal *tmpLitPtr = findAddressInLittab(litHead, decimalToHex(tmpAddress-3)); // Check if in littab
-                
+
                 if(tmpSymPtr != nullptr){
                     string s = concatTrailingSpaces(tmpSymPtr->getName());
                     fprintf(fp, "%s", s.c_str()); // If in symtab print out symbol name
@@ -1028,7 +1028,7 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
                 else {
                     fprintf(fp, "%s", objVector[index].substr(3,3).c_str()); // Else print remaining info
                 }
-     
+
             }
             else { // If extended i.e. not relative
                 Symbol *tmpSymPtr = findAddressInSymtab(symHead, "0"+objVector[index].substr(3,5)); // Check in symtab
@@ -1044,7 +1044,7 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
                 }
                 else fprintf(fp, "%s", objVector[index].substr(3,5).c_str()); // Else print remaining info
             }
-            
+
 
             if(nixbpeStr.substr(2,1)=="1") fprintf(fp, ",X"); // Check if indexed
 
@@ -1149,14 +1149,14 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
             if(RESBlength % 3 == 0) RESWlength = RESBlength / 3;
             string RESBstring = toString(RESBlength);
             string RESWstring = toString(RESWlength);
-            
+
             if((RESBlength) % 3 == 0) fprintf(fp, "%s   RESW    %s", tmpSym->getName().c_str() ,RESWstring.c_str());
             else fprintf(fp, "%s   RESB    %s", tmpSym->getName().c_str() ,RESBstring.c_str());
-            
+
             fputc(10, fp);
             address += RESBlength;
         }
-        
+
         tmpSym = tmpSym->next;
     }
 
@@ -1167,7 +1167,7 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
     else fprintf(fp, "         END   %s", objVector[objVector.size()-1].c_str());
     fputc(10, fp);
 
-}       
+}
 
 /*************************************************************
  FUNCTION: writeAddress(FILE *fp, int address)
@@ -1179,7 +1179,7 @@ void writeSicFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
 void writeAddress(FILE *fp, int address){
 
     string s = decimalToHex(address);
-    
+
     fprintf(fp, "%s  ", s.substr(s.length()-4,4).c_str());
 }
 
@@ -1215,7 +1215,7 @@ void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
     fprintf(fp, "   START   ");
     fprintf(fp, "%s", objVector[1].substr(6,6).c_str());
     fputc(10, fp);
-     
+
     // Text records
     int index = 3;
     int address = hexToDecimal(objVector[1].substr(6,6));;
@@ -1287,7 +1287,7 @@ void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
             else if(nixbpeStr.substr(3,1)=="1") checkAddress = baseAddress;
 
             if(nixbpeStr.substr(1,1)=="1") baseAddress = checkAddress + hexToDecimal(objVector[index].substr(3,checkNibbles));
-            
+
         }
 
         //Columns 18-35
@@ -1298,14 +1298,14 @@ void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
         else if(formatFinder(objVector[index].substr(0,2))==3){ // Format 3/4
             if(nixbpeStr.substr(5,1)=="0"){ // If not extended
                 int tmpAddress = -1; // Placeholder
-                
+
                 if(nixbpeStr.substr(4,1)=="1") tmpAddress = address + 3 + signedHexToDecimal(objVector[index].substr(3,3)); // pc relative
                 else if(nixbpeStr.substr(3,1)=="1") tmpAddress = baseAddress + hexToDecimal(objVector[index].substr(3,3)); // base relative
                 else tmpAddress = hexToDecimal(objVector[index].substr(3,3)); // neither base nor pc realtive
-                
+
                 Symbol *tmpSymPtr = findAddressInSymtab(symHead, decimalToHex(tmpAddress)); // check if in symtab
                 Literal *tmpLitPtr = findAddressInLittab(litHead, decimalToHex(tmpAddress-3)); // check if in littab
-                
+
                 if(tmpSymPtr != nullptr){
                     string s = concatTrailingSpaces(tmpSymPtr->getName());
                     column -= tmpSymPtr->getName().length() - s.length();
@@ -1321,8 +1321,8 @@ void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
                 else{
                     fprintf(fp, "%s", objVector[index].substr(3,3).c_str()); // else print remaining info
                     column += objVector[index].substr(3,3).length();
-                } 
-     
+                }
+
             }
             else { // if extended i.e. not relative
                 Symbol *tmpSymPtr = findAddressInSymtab(symHead, "0"+objVector[index].substr(3,5)); // check in symtab
@@ -1343,15 +1343,15 @@ void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
                 else{
                     fprintf(fp, "%s", objVector[index].substr(3,5).c_str()); // else print remaining info
                     column += objVector[index].substr(3,5).length();
-                } 
+                }
             }
-            
+
 
             if(nixbpeStr.substr(2,1)=="1"){
                 fprintf(fp, ",X"); // check if indexed
                 column+=2;
-            } 
-            
+            }
+
             writeOpcode(fp, objVector[index], column);
 
             fputc(10, fp);
@@ -1475,7 +1475,7 @@ void writeLisFile(FILE *fp, vector<string> objVector, Symbol *symHead, Literal *
             fputc(10, fp);
             address += RESBlength;
         }
-        
+
         tmpSym = tmpSym->next;
     }
 
@@ -1507,7 +1507,7 @@ int main(int argc, char* argv[]){
     Literal *litHead = nullptr;
     FILE *fp = fopen(symFile.c_str(), "r");
     symHead = toSymbol(symHead, fp);//pass to toSymbol
-    
+
     litHead = toLiteral(litHead, fp);
 
     closeFile(fp);

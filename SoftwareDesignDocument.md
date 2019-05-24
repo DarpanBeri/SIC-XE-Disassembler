@@ -1,12 +1,12 @@
 <!-----------------------------------------------------------------
- Name: Blake Meyers(cssc0430, Red id: 819557369), Darpan Beri(cssc0429, Red id: 820880704), Zach Selchau(cssc0418, Red id: 820533188)
- Project: CS530 Assignment 2
+ Name: Blake Meyers, Darpan Beri, Zach Selchau
+ Project: SIC-XE-Disassembler
  File: README.md
  Notes: A README file describing the program and detailing its files.
 --------------------------------------------------------------------->
 
-## CS-530, Spring 2019 Assignment 2 Sofware Design Document
-## Blake Meyers(cssc0430, Red id: 819557369), Darpan Beri(cssc0429, Red id: 820880704), Zach Selchau(cssc0418, Red id: 820533188)
+## SIC-XE-Disassembler Sofware Design Document
+## Blake Meyers, Darpan Beri, Zach Selchau
 
 ### Software Design
 
@@ -22,7 +22,7 @@
 
 ### Comments about working as a team
 
-* **Pros:** 
+* **Pros:**
     - Easier to catch and correct errors.
     - Allowed us to bounce ideas off each other.
     - Discussing implementations.

@@ -1,8 +1,8 @@
 /*************************************************************
- Name: Blake Meyers(cssc0430, Red id: 819557369), Darpan Beri(cssc0429, Red id: 820880704), Zach Selchau(cssc0418, Red id: 820533188) 
- Project: CS530 Assignment 2
+ Name: Blake Meyers, Darpan Beri, Zach Selchau
+ Project: SIC-XE-Disassembler
  File: xed.hpp
- Notes: Header file containing required libraries and 
+ Notes: Header file containing required libraries and
  function prototypes.
  *************************************************************/
 #include <cstdlib>
@@ -113,7 +113,7 @@ bool opcodeValid(string hex);
 
 /*************************************************************
  FUNCTION: formatFinder()
- DESCRIPTION: Finds format of an instruction based off its 
+ DESCRIPTION: Finds format of an instruction based off its
  opcode.
  I/O:
     input parameters: String
@@ -167,7 +167,7 @@ class Symbol{
         void setNext(Symbol *nextSym){
             this->next = nextSym;
         }
-        
+
         string getName(){
             return this->name;
         }
